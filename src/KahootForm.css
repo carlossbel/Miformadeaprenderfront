@@ -1,0 +1,124 @@
+/*.kahoot-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f9f9f9;
+    padding: 20px;
+  }
+  
+   Contenedor principal que engloba la pregunta y las respuestas 
+  .kahoot-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 1200px;
+    background-color: #e6e6ff;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  }
+    
+  */
+  .question-container {
+    width: 100%; /* Abarca todo el ancho */
+    background-color: white;
+    padding: 80px;
+    margin-bottom: 30px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    font-size: 24px; /* Aumenta el tamaño de la fuente para mayor visibilidad */
+    color: #5A48E7; /* Cambia el color según el diseño que deseas */
+}
+
+
+.answers-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas para las respuestas */
+    gap: 20px; /* Espacio entre las respuestas */
+    width: 80%; /* Ajusta el ancho de las respuestas para que no ocupen toda la pantalla */
+    margin: 0 auto; /* Centra el contenedor de respuestas */
+    padding: 20px 0;
+}
+
+.answer-option {
+    background-color: #b492f0; /* Color base de la respuesta */
+    padding: 30px 20px;
+    border-radius: 10px;
+    font-size: 18px;
+    color: white;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+}
+
+.answer-option:hover {
+    background-color: #9d74e7; /* Efecto hover para un mejor feedback visual */
+}
+
+
+
+  .kahoot-question {
+    font-size: 3rem;
+    color: #5a2d82;
+    font-weight: bold;
+  }
+  
+  .options-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    width: 100%;
+  }
+  
+  .kahoot-option {
+    font-size: 1.5rem;
+    padding: 50px;
+    background-color: #d9b3ff;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+  }
+  
+  .kahoot-option:hover {
+    background-color: #b580d9;
+  }
+  
+  .stars-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+  }
+  
+
+  
+  .star-1 { transform: rotate(10deg); }
+  .star-2 { transform: rotate(-10deg); }
+  .star-3 { transform: rotate(20deg); }
+  .star-4 { transform: rotate(-20deg); }
+  .star-5 { transform: rotate(5deg); }
+  
+
+  .timer-container {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background-color: #5A48E7;
+    color: white;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
