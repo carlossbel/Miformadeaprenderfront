@@ -13,7 +13,7 @@ function App() {
   };
 
   const handleCuestionario = () => {
-    navigate('/cuestionario'); // Redirige a la ruta principal "/"
+    navigate('/cuestionario'); 
   };
 
   return (
