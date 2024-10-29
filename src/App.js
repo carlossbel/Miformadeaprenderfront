@@ -16,13 +16,17 @@ function App() {
     navigate('/cuestionario'); 
   };
 
+  const handleDatos = () => {
+    navigate('/datos'); 
+  };
+
   return (
     <div className="login-container">
       <div className="content-box">
         <img src={logo} alt="Logo" className="logo" />
         <div className="input-box">
           <input type="text" placeholder="PIN del Quiz" className="pin-input" />
-          <button className="login-btn" onClick={handleCuestionario}>Ingresar</button>
+          <button className="login-btn" onClick={handleDatos}>Ingresar</button>
         </div>
         <p className="login-text">
           Eres tutor/profesor <span className="login-link" onClick={handleLoginClick}>inicia sesión</span>
