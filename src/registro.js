@@ -5,43 +5,41 @@ import './Login.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 
-const Login = () => {
+const Registro = () => {
   const navigate = useNavigate(); 
   const [username, setUsername] = useState(''); 
   const [password, setPassword] = useState(''); 
+  const [email, setEmail] = useState('');
   const [error, setError] = useState(''); 
   const handleBackClick = () => {
     navigate('/'); 
   };
 
-  const handleRegistro = () => {
-    navigate('/registro'); 
-  };
-
-  const handleLogin = async () => {
+  const handleRegistro = async () => {
     try {
-      const response = await fetch('http://localhost:5000/auth/login', {
+      const response = await fetch('http://localhost:5002/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password, email }), 
       });
-
+  
       if (!response.ok) {
         const errorData = await response.json();
         setError(errorData.message); 
         return;
       }
-
+  
       const data = await response.json();
       console.log(data); 
-      navigate('/tutor'); 
+      navigate('/login'); 
     } catch (error) {
       setError('Error de conexión al servidor'); 
       console.error('Error:', error);
     }
   };
+  
 
   return (
     <div className="login-container"> 
@@ -49,7 +47,7 @@ const Login = () => {
       <div className="input-box1">
         <input
           type="text"
-          placeholder="Nombre"
+          placeholder="Nombre completo"
           className="pin-input"
           value={username}
           onChange={(e) => setUsername(e.target.value)} 
@@ -61,10 +59,16 @@ const Login = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)} 
         />
-        <button className="login-btn" onClick={handleLogin}>Iniciar Sesión</button>
-        {error && <p className="error-message">{error}</p>} 
+        <input
+          type="email"
+          placeholder="Correo Electrónico"
+          className="pin-input"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)} 
+        />
 
         <button className="register-btn" onClick={handleRegistro}>Regístrate</button>
+
         <div className="stars-container">
           <FontAwesomeIcon icon={faStar} className="star-icon star-11" />
           <FontAwesomeIcon icon={faStar} className="star-icon star-22" />
@@ -78,4 +82,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Registro;

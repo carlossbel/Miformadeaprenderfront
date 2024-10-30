@@ -1,0 +1,171 @@
+/* Reiniciar estilos básicos */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #6a0dad;
+    padding: 15px 20px; /* Espacio interno para dar respiro a los elementos */
+    color: white;
+    width: 100%;
+    position: fixed; /* Fija la navbar en la parte superior */
+    top: 0;
+    left: 0;
+    z-index: 1000; /* Asegura que esté siempre encima del contenido */
+}
+
+.navbar-logo {
+    height: 60px;
+    margin-right: -600px;
+}
+
+.navbar-search {
+    flex: 0.5;
+    padding: 15px;
+    border-radius: 5px;
+    border: none;
+    margin-right: -600px;
+}
+
+.navbar-filter {
+    background-color: #fff;
+    color: #6a0dad;
+    border: none;
+    border-radius: 5px;
+    padding: 15px 40px;
+    cursor: pointer;
+    margin-right: -600px;
+}
+
+.navbar-generate {
+    background-color: #fff;
+    color: #6a0dad;
+    border: none;
+    border-radius: 5px;
+    padding: 15px 40px;
+    cursor: pointer;
+}
+
+.navbar-filter:hover,
+.navbar-generate:hover {
+    background-color: #eaeaea;
+}
+
+/* Contenedor Principal */
+.main-content {
+    background-color: #f0f0f5;
+    padding: 40px 20px; /* Espacio extra superior para evitar solapamiento con navbar */
+    margin: 80px 0 20px; /* Mueve el contenido hacia abajo, sin márgenes laterales */
+    width: 100%; /* Ocupar todo el ancho de la pantalla */
+    border-radius: 10px;
+}
+
+/* Título del Grupo */
+.group-title {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Lista de Alumnos */
+.students-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Más espacio entre filas de alumnos */
+    max-height: 800px; /* Altura máxima para mostrar la barra de desplazamiento */
+    overflow-y: auto; /* Habilita la barra de desplazamiento vertical */
+    padding: 20px 0; /* Espaciado interno */
+    border: 1px solid #ddd; /* Agrega borde alrededor de la lista */
+    border-radius: 5px; /* Esquinas redondeadas */
+    background-color: #f9f9f9; /* Color de fondo para la lista */
+    width: 100%; /* Ocupar todo el ancho de la pantalla */
+    margin: 0; /* Elimina márgenes */
+}
+
+/* Estilo para cada fila de alumnos */
+.student-row {
+    display: flex;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 15px 50px; /* Espaciado interno */
+    border-radius: 5px;
+    align-items: center;
+    gap: 500px; /* Espacio entre columnas */
+}
+
+/* Estilos para los datos del alumno */
+.student-name {
+    flex: 1;
+    font-weight: bold;
+    font-size: 18px; /* Tamaño de texto más grande */
+}
+
+.student-email {
+    flex: 2;
+    font-size: 18px; /* Tamaño de texto más grande */
+}
+
+.student-style {
+    flex: 1;
+    text-align: right;
+    font-style: italic;
+    font-size: 18px; /* Tamaño de texto más grande */
+}
+
+.back-btn:hover {
+    background-color: #5a009e;
+}
+
+/* Estilos para el botón de detalles */
+.details-button {
+    margin-left: auto; /* Alínea el botón a la derecha */
+    padding: 10px 15px; /* Espaciado interno del botón */
+    background-color: #6a0dad; /* Color de fondo del botón */
+    color: white; /* Color de texto del botón */
+    border: none; /* Sin borde */
+    border-radius: 5px; /* Esquinas redondeadas */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+}
+
+.details-button:hover {
+    background-color: #5a009e; /* Cambia el color al pasar el cursor */
+}
+
+/* Estilo para el menú desplegable */
+.dropdown-menu {
+    position: absolute; /* Asegura que el menú se posicione sobre otros elementos */
+    background-color: white; /* Color de fondo */
+    border: 1px solid #ddd; /* Borde */
+    border-radius: 5px; /* Esquinas redondeadas */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para efecto de profundidad */
+    z-index: 10; /* Asegura que esté encima de otros elementos */
+    margin-top: 161px; /* Espacio entre el botón y el menú */
+    right: 196px; /* Alinear el menú a la derecha del botón */
+}
+
+/* Estilo para los elementos del menú desplegable */
+.dropdown-menu div {
+    padding: 10px; /* Espaciado interno */
+    cursor: pointer; /* Cambia el cursor al pasar por encima */
+    color: #6a0dad; /* Color morado para las letras */
+}
+
+.dropdown-menu div:hover {
+    background-color: #f0f0f5; /* Color al pasar el mouse sobre un grupo */
+}
+
+.navbar-filter {
+    background-color: #fff;
+    color: #6a0dad;
+    border: none;
+    border-radius: 5px;
+    padding: 15px 40px;
+    cursor: pointer;
+    position: relative; /* Cambiado a relativo para permitir posicionamiento absoluto del menú */
+}

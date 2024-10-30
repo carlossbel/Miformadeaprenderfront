@@ -4,6 +4,8 @@ import App from './App';
 import Login from './login'; 
 import Cuestionario from './cuestionario';
 import Datos from './datos';
+import Registro from './registro';
+import Tutor from './tutor';
 
 
 function AppRouter() {
@@ -14,6 +16,8 @@ function AppRouter() {
         <Route path="/login" element={<Login/>} /> 
         <Route path="/cuestionario" element={<Cuestionario/>} /> 
         <Route path="/datos" element={<Datos/>} /> 
+        <Route path="/registro" element={<Registro/>} /> 
+        <Route path="/tutor" element={<Tutor/>} />
       </Routes>
     </Router>
   );
