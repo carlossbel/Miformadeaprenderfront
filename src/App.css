@@ -129,3 +129,88 @@ h2 {
 .star-3 { top: 80%; left: 250%; }
 .star-4 { top: 70%; left: 80%; }
 .star-5 { top: 80%; left: -150%; }
+
+
+
+/* Estilos para la Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Asegúrate de que la modal esté por encima de otros elementos */
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px; /* Ajusta el ancho según sea necesario */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+.modal-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.modal-btn {
+  background-color: #8157D9;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 15px; /* Aumenta el tamaño del botón */
+  cursor: pointer;
+  width: 100%; /* Hace que el botón ocupe todo el ancho de la modal */
+  margin-bottom: 10px; /* Espaciado entre botones */
+  font-size: 16px; /* Aumenta el tamaño del texto del botón */
+}
+
+.modal-close {
+  background-color: #f44336; /* Color de fondo para el botón de cerrar */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 15px; /* Tamaño del botón de cerrar */
+  width: 100%; /* Hace que el botón ocupe todo el ancho de la modal */
+}
+
+/*Modal error*/
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Asegúrate de que el modal esté por encima de otros elementos */
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.modal-close {
+  background: red;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
