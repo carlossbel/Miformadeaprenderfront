@@ -16,21 +16,51 @@ const Tutor = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState(group);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isTokensModalOpen, setIsTokensModalOpen] = useState(false); // Modal para los tokens activos
+  const [isTokensModalOpen, setIsTokensModalOpen] = useState(false);
+  const [isTokenDetailsModalOpen, setIsTokenDetailsModalOpen] = useState(false); // Nueva modal para mostrar detalles del token
   const [newGroup, setNewGroup] = useState('');
   const [error, setError] = useState('');
   const [token, setToken] = useState('');
-  const [timeLeft, setTimeLeft] = useState(60);
-  const [tokenDetails, setTokenDetails] = useState(null); // Guardamos los detalles del token
-  const [activeTokens, setActiveTokens] = useState([]); // Lista de tokens activos
+  const [timeLeft, setTimeLeft] = useState(3600);
+  const [tokenDetails, setTokenDetails] = useState(null);
+  const [activeTokens, setActiveTokens] = useState([]);
+
+
+  useEffect(() => {
+    fetchTokenDetails(); // Llama a la función cuando el componente se monta
+  }, []); 
+
 
   const handleBackClick = () => {
     navigate('/');
   };
 
+
+
   const handleDetailsClick = (student) => {
     alert(`Detalles de ${student.name}`);
   };
+
+
+  const fetchTokenDetails = async () => {
+    try {
+      const response = await fetch('https://miformadeaprender-token.onrender.com/auth/token-details', {
+        method: 'GET',
+      });
+      if (!response.ok) {
+        setError('Error al obtener los detalles del token');
+        return;
+      }
+
+      const data = await response.json();
+      setTokenDetails(data);
+      setActiveTokens(data); // Guardamos los tokens activos
+    } catch (error) {
+      setError('Error al conectar con el servidor');
+      console.error('Error:', error);
+    }
+  };
+  
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -53,67 +83,63 @@ const Tutor = () => {
 
   const openTokensModal = () => {
     setIsTokensModalOpen(true);
-    fetchTokenDetails(); // Llamar a la función para obtener los tokens activos
+    fetchTokenDetails();
   };
 
   const closeTokensModal = () => {
     setIsTokensModalOpen(false);
   };
 
+  const openTokenDetailsModal = () => {
+    setIsTokenDetailsModalOpen(true);
+  };
+
+  const closeTokenDetailsModal = () => {
+    setIsTokenDetailsModalOpen(false);
+  };
+
   const handleGenerateToken = async () => {
-    if (newGroup.trim() === '') {
-      setError('Por favor ingrese un nombre de grupo');
-      return;
-    }
+  if (newGroup.trim() === '') {
+    setError('Por favor ingrese un nombre de grupo');
+    return;
+  }
 
-    try {
-      const response = await fetch('http://localhost:5003/auth/generate-token', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ group: newGroup }),
-      });
+  try {
+    const response = await fetch('https://miformadeaprender-token.onrender.com/auth/generate-token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ group: newGroup }),
+    });
 
-      if (!response.ok) {
-        setError('Error al generar el token');
-        return;
+    const data = await response.json();
+
+    if (response.ok) {
+      // Si no existe un token, se genera uno nuevo
+      if (!data.token) {
+        setError(data.message); // Muestra el mensaje de que ya existe un token
+        setToken(data.token); // Muestra el token existente
+      } else {
+        setToken(data.token); // Muestra el token recién generado
+        setTimeLeft(3600); // Establece el tiempo de expiración (ejemplo de 1 hora)
+        openTokenDetailsModal(); // Abre la modal con los detalles del token
+        setNewGroup(''); // Limpiar el campo de grupo
+        closeModal(); // Cierra el modal
+        fetchTokenDetails(); // Recarga los detalles de los tokens
       }
-
-      const data = await response.json();
-      setToken(data.token);
-      setTimeLeft(60); // Reiniciar el temporizador a 60 segundos
-      alert(`Token generado para el grupo: ${newGroup}\nToken: ${data.token}`);
-      setNewGroup('');
-      closeModal();
-      fetchTokenDetails(); // Llamar a la función para obtener los detalles del token
-    } catch (error) {
-      setError('Error de conexión al servidor');
-      console.error('Error:', error);
+    } else {
+      setError('Error al generar el token');
     }
-  };
+  } catch (error) {
+    setError('Error de conexión al servidor');
+    console.error('Error:', error);
+  }
+};
 
-  // Obtener los detalles de los tokens activos de la base de datos
-  const fetchTokenDetails = async () => {
-    try {
-      const response = await fetch('http://localhost:5003/auth/token-details', {
-        method: 'GET',
-      });
-      if (!response.ok) {
-        setError('Error al obtener los detalles del token');
-        return;
-      }
 
-      const data = await response.json();
-      setTokenDetails(data);
-      setActiveTokens(data); // Guardamos los tokens activos
-    } catch (error) {
-      setError('Error al conectar con el servidor');
-      console.error('Error:', error);
-    }
-  };
 
-  // Manejo del temporizador
+
   useEffect(() => {
     if (timeLeft > 0) {
       const timer = setInterval(() => {
@@ -122,13 +148,12 @@ const Tutor = () => {
       
       return () => clearInterval(timer);
     } else if (timeLeft === 0) {
-      setToken(''); // Borrar el token cuando el tiempo se acaba
+      setToken('');
     }
   }, [timeLeft]);
 
   return (
     <div className="tutor-container">
-      {/* Navbar */}
       <div className="navbar">
         <img src={logo} alt="Logo" className="navbar-logo" />
         <input type="text" placeholder="Buscar..." className="navbar-search" />
@@ -145,13 +170,11 @@ const Tutor = () => {
         <button className="navbar-generate" onClick={openModal}>
           Generar quiz
         </button>
-        {/* Botón para abrir la modal de Tokens activos */}
         <button className="navbar-generate fixed-token-button" onClick={openTokensModal}>
           Tokens activos
         </button>
       </div>
 
-      {/* Modal para generar quiz */}
       {isModalOpen && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -174,25 +197,15 @@ const Tutor = () => {
         </div>
       )}
 
-      {/* Modal para Tokens activos */}
-      {isTokensModalOpen && (
+      {/* Modal para mostrar detalles del token generado */}
+      {isTokenDetailsModalOpen && (
   <div className="modal-overlay">
     <div className="modal-content">
-      <h3>Tokens Activos</h3>
-      {activeTokens.length > 0 ? (
-        <ul className="token-details"> {/* Agregada clase para estilizar los detalles de los tokens */}
-          {activeTokens.map((tokenDetail, index) => (
-            <li key={index}>
-              <p><strong>Token:</strong> {tokenDetail.token}</p>
-              <p><strong>Grupo:</strong> {tokenDetail.grupo}</p>
-              <p><strong>Creado en:</strong> {new Date(tokenDetail.created_at).toLocaleString()}</p>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No hay tokens activos.</p>
-      )}
-      <button className="modal-close" onClick={closeTokensModal}>
+      <h3>Detalles del Token Generado</h3>
+      <p><strong>Grupo:</strong> {newGroup}</p>
+      <p><strong>Token:</strong> {token}</p>
+      <p><strong>Tiempo restante:</strong> {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}</p>
+      <button className="modal-close" onClick={closeTokenDetailsModal}>
         Cerrar
       </button>
     </div>
@@ -200,27 +213,45 @@ const Tutor = () => {
 )}
 
 
-<div className="main-content">
-  <h2 className="group-title">{selectedGroup}</h2>
-  <div className="students-list">
-    {students.map((student, index) => (
-      <div key={index} className="student-row">
-        <div className="student-name">{student.name}</div>
-        <div className="student-email">{student.email}</div>
-        <div className="student-grupo">{student.grupo}</div>
-        <div className="student-style">{student.style}</div>
-        <button className="details-button" onClick={() => handleDetailsClick(student)}>
-          Detalles
-        </button>
-      </div>
-    ))}
-  </div>
-  {token && (
-    <p className="token-display">
-      Token generado: {token} - Expira en: {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}
-    </p>
-  )}
+      {isTokensModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>Tokens Activos</h3>
+            {activeTokens.length > 0 ? (
+              <ul className="token-details">
+                {activeTokens.map((tokenDetail, index) => (
+                  <li key={index}>
+                    <p><strong>Token:</strong> {tokenDetail.token}</p>
+                    <p><strong>Grupo:</strong> {tokenDetail.grupo}</p>
+                    <p>Tiempo restante: {tokenDetail.time_left_minutes} minutos y {tokenDetail.time_left_seconds} segundos</p>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No hay tokens activos.</p>
+            )}
+            <button className="modal-close" onClick={closeTokensModal}>
+              Cerrar
+            </button>
+          </div>
+        </div>
+      )}
 
+      <div className="main-content">
+        <h2 className="group-title">{selectedGroup}</h2>
+        <div className="students-list">
+          {students.map((student, index) => (
+            <div key={index} className="student-row">
+              <div className="student-name">{student.name}</div>
+              <div className="student-email">{student.email}</div>
+              <div className="student-grupo">{student.grupo}</div>
+              <div className="student-style">{student.style}</div>
+              <button className="details-button" onClick={() => handleDetailsClick(student)}>
+                Detalles
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

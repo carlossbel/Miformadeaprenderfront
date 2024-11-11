@@ -5,6 +5,9 @@ import './Login.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 
+
+const SERVER = process.env.REACT_APP_API_URL;
+
 const Login = () => {
   const navigate = useNavigate(); 
   const [username, setUsername] = useState(''); 
@@ -20,28 +23,31 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('http://localhost:5000/auth/login', {
+      const response = await fetch('https://miformadeaprender-login.onrender.com/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ username, password }),
       });
-
+  
       if (!response.ok) {
         const errorData = await response.json();
-        setError(errorData.message); 
+        setError(errorData.message);
         return;
       }
-
+  
       const data = await response.json();
-      console.log(data); 
-      navigate('/tutor'); 
+      localStorage.setItem('token', data.token); // Guarda el token en localStorage
+      navigate('/tutor');
     } catch (error) {
-      setError('Error de conexión al servidor'); 
+      setError('Error de conexión al servidor');
       console.error('Error:', error);
     }
   };
+  
+
+console.log(SERVER);  
 
   return (
     <div className="login-container"> 

@@ -17,7 +17,7 @@ const Registro = () => {
 
   const handleRegistro = async () => {
     try {
-      const response = await fetch('http://localhost:5002/auth/register', {
+      const response = await fetch('https://miformadeaprender.onrender.com/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
