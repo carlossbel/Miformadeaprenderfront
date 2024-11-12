@@ -37,9 +37,6 @@ const Login = () => {
         return;
       }
   
-      const data = await response.json();
-      localStorage.setItem('token', data.token); // Guarda el token en localStorage
-      navigate('/tutor');
     } catch (error) {
       setError('Error de conexión al servidor');
       console.error('Error:', error);
