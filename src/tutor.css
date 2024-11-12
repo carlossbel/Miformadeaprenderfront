@@ -104,7 +104,7 @@
     padding: 20px 50px; /* Incrementado el padding para mayor espacio */
     border-radius: 5px;
     align-items: center;
-    gap: 350px; /* Espacio entre columnas */
+    gap: 300px; /* Espacio entre columnas */
     font-size: 18px; /* Aumentado de 16px a 18px */
 }
 
@@ -155,8 +155,8 @@
     border-radius: 5px; /* Esquinas redondeadas */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para efecto de profundidad */
     z-index: 10; /* Asegura que esté encima de otros elementos */
-    margin-top: 205px; /* Espacio entre el botón y el menú */
-    right: 212px; /* Alinear el menú a la derecha del botón */
+    margin-top: 255px; /* Espacio entre el botón y el menú */
+    right: 240px; /* Alinear el menú a la derecha del botón */
     font-size: 18px; /* Aumentado de 16px a 18px */
 }
 

@@ -7,14 +7,14 @@ import { faStar, faFilter, faSearch } from '@fortawesome/free-solid-svg-icons';
 
 const Tutor = () => {
   const navigate = useNavigate();
-  const [group, setGroup] = useState('Grupo IDGS10');
+  const [grupos, setGrupos] = useState([]);
   const [students, setStudents] = useState([
     { name: 'Alumno 1', email: 'alumno1@example.com', grupo: 'Grupo IDGS10', style: 'Visual' },
     { name: 'Alumno 2', email: 'alumno2@example.com', grupo: 'Grupo IDGS10', style: 'Auditivo' },
     { name: 'Alumno 20', email: 'alumno20@example.com', grupo: 'Grupo IDGS10', style: 'Kinestésico' },
   ]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [selectedGroup, setSelectedGroup] = useState(group);
+  const [selectedGroup, setSelectedGroup] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isTokensModalOpen, setIsTokensModalOpen] = useState(false);
   const [isTokenDetailsModalOpen, setIsTokenDetailsModalOpen] = useState(false); // Nueva modal para mostrar detalles del token
@@ -24,11 +24,33 @@ const Tutor = () => {
   const [timeLeft, setTimeLeft] = useState(3600);
   const [tokenDetails, setTokenDetails] = useState(null);
   const [activeTokens, setActiveTokens] = useState([]);
+  
+  const [groups, setGroups] = useState([]);
+  
+  
 
 
   useEffect(() => {
-    fetchTokenDetails(); // Llama a la función cuando el componente se monta
+    const fetchGrupos = async () => {
+      try {
+        const response = await fetch('https://miformadeaprender-filtro-grupo.onrender.com/auth/buscar'); // Asegúrate de que la ruta sea correcta
+        if (response.ok) {
+          const data = await response.json();
+          setGroups(data.grupos); // Aquí usamos 'setGroups' en lugar de 'setGrupos'
+        } else {
+          console.error('Error al obtener los grupos');
+        }
+      } catch (error) {
+        console.error('Error de conexión al servidor', error);
+      }
+    };
+  
+    fetchGrupos();
   }, []); 
+
+  const handleBuscar = (newGroup) => {
+    setSelectedGroup(newGroup);
+  };
 
 
   const handleBackClick = () => {
@@ -66,11 +88,29 @@ const Tutor = () => {
     setDropdownOpen(!dropdownOpen);
   };
 
-  const handleGroupChange = (newGroup) => {
-    setSelectedGroup(newGroup);
-    setGroup(newGroup);
-    setDropdownOpen(false);
+  const handleGroupChange = async (group) => {
+    setSelectedGroup(group); // Cambia el grupo seleccionado
+    setDropdownOpen(false);   // Cierra el menú desplegable
+    console.log(`Grupo seleccionado: ${group}`);
+    
+    try {
+      // Hacemos una consulta a la API para obtener los usuarios de ese grupo
+      const response = await fetch(`https://miformadeaprender-filtro-grupo.onrender.com/auth/alumnos/${group}`);
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+        setStudents(data.usuarios); // Actualizamos el estado con los usuarios del grupo
+      } else {
+        console.error(`No se encontraron usuarios en el grupo ${group}`);
+      }
+    } catch (error) {
+      console.error('Error de conexión al servidor', error);
+    }
   };
+  
+  
+  
+  
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -162,9 +202,16 @@ const Tutor = () => {
         </button>
         {dropdownOpen && (
           <div className="dropdown-menu">
-            <div onClick={() => handleGroupChange('Grupo IDGS10')}>Grupo IDGS10</div>
-            <div onClick={() => handleGroupChange('Grupo IDGS20')}>Grupo IDGS20</div>
-            <div onClick={() => handleGroupChange('Grupo IDGS30')}>Grupo IDGS30</div>
+           {groups.length > 0 ? (
+  groups.map((group, index) => (
+    <div key={index} onClick={() => handleGroupChange(group.grupo)}>
+      {group.grupo}
+    </div>
+  ))
+) : (
+  <p>No se encontraron grupos</p>
+)}
+
           </div>
         )}
         <button className="navbar-generate" onClick={openModal}>
@@ -240,12 +287,11 @@ const Tutor = () => {
       <div className="main-content">
         <h2 className="group-title">{selectedGroup}</h2>
         <div className="students-list">
-          {students.map((student, index) => (
+        {students.map((student, index) => (
             <div key={index} className="student-row">
-              <div className="student-name">{student.name}</div>
-              <div className="student-email">{student.email}</div>
-              <div className="student-grupo">{student.grupo}</div>
-              <div className="student-style">{student.style}</div>
+              <div className="student-name"><strong>Nombre: </strong>{student.username}</div>
+              <div className="student-email"><strong>Correo: </strong>{student.email}</div>
+              <div className="student-grupo"><strong>Grupo: </strong>{student.grupo}</div>
               <button className="details-button" onClick={() => handleDetailsClick(student)}>
                 Detalles
               </button>
