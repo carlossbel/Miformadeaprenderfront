@@ -6,6 +6,7 @@ import Cuestionario from './cuestionario';
 import Datos from './datos';
 import Registro from './registro';
 import Tutor from './tutor';
+import Profesor from './profesor';
 
 
 function AppRouter() {
@@ -18,6 +19,7 @@ function AppRouter() {
         <Route path="/datos" element={<Datos/>} /> 
         <Route path="/registro" element={<Registro/>} /> 
         <Route path="/tutor" element={<Tutor/>} />
+        <Route path="/profesor" element={<Profesor/>} />
       </Routes>
     </Router>
   );

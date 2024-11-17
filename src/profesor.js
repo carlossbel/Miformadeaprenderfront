@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from './Logo_morado.png';
-import './tutor.css';
+import './profesor.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faFilter, faSearch } from '@fortawesome/free-solid-svg-icons';
 
-const Tutor = () => {
+const Profesor = () => {
   const navigate = useNavigate();
   const [grupos, setGrupos] = useState([]);
   const [students, setStudents] = useState([
@@ -24,20 +24,8 @@ const Tutor = () => {
   const [timeLeft, setTimeLeft] = useState(3600);
   const [tokenDetails, setTokenDetails] = useState(null);
   const [activeTokens, setActiveTokens] = useState([]);
-  const [isProfessorModalOpen, setIsProfessorModalOpen] = useState(false);
+  
   const [groups, setGroups] = useState([]);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
-  const [isProfessorSection, setIsProfessorSection] = useState(true);
-  const [professors, setProfessors] = useState([]); // Lista de profesores
-  const [newStudent, setNewStudent] = useState({
-    username: '',
-    password: '',
-    email: '',
-    professorId: '', // ID del profesor seleccionado
-    groupId: '', // ID del grupo seleccionado
-  });
-
   
   
 
@@ -65,127 +53,11 @@ const Tutor = () => {
   };
 
 
-  //Mostrar grupos en combo 
-  useEffect(() => {
-    const fetchGrupos = async () => {
-      try {
-        const response = await fetch('https://miformadeaprender-all.onrender.com/auth/buscar');
-        if (response.ok) {
-          const data = await response.json();
-          // Asegúrate de que la respuesta tiene la clave 'grupos' con el array de grupos
-          setGroups(data.grupos); // Asignamos la respuesta de los grupos al estado
-        } else {
-          console.error('Error al obtener los grupos');
-        }
-      } catch (error) {
-        console.error('Error de conexión al servidor', error);
-      }
-    };
-  
-    fetchGrupos();
-  }, []);
-
   const handleBackClick = () => {
     navigate('/');
   };
 
-  const [newProfessor, setNewProfessor] = useState({
-    username: '',
-    password: '',
-    email: '',
-  });
 
-  
-  useEffect(() => {
-    const fetchProfessors = async () => {
-      try {
-        const response = await fetch('https://miformadeaprender-all.onrender.com/auth/getProfesores');
-        const data = await response.json();
-  
-        if (response.ok) {
-          setProfessors(data.professors); // Guardamos los profesores en el estado
-        } else {
-          console.error('Error:', data.message);
-        }
-      } catch (error) {
-        console.error('Error al obtener los profesores:', error);
-      }
-    };
-  
-    fetchProfessors(); // Llamamos a la función cuando se monta el componente
-  }, []);
-  
-  
-
-  const handleRegisterStudent = async () => {
-    if (!newStudent.username || !newStudent.password || !newStudent.email || !newStudent.professorId || !newStudent.groupId) {
-      alert('Por favor completa todos los campos.');
-      return;
-    }
-  
-    try {
-      const response = await fetch('https://miformadeaprender-all.onrender.com/auth/registro-estudiante', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newStudent),
-      });
-  
-      const data = await response.json();
-  
-      if (response.ok) {
-        setErrorMessage(''); // Limpiar el mensaje de error
-        setSuccessMessage('Estudiante registrado exitosamente.');
-        setNewStudent({ username: '', password: '', email: '', professorId: '', groupId: '' }); // Limpiar el formulario
-        //closeStudentModal(); // Cerrar el modal
-      } else {
-        setErrorMessage(data.message || 'Error al registrar el estudiante.');
-      }
-    } catch (error) {
-      console.error('Error al enviar los datos:', error);
-      setErrorMessage('Ocurrió un error al registrar el estudiante.');
-    }
-  };
-
-  
-  //Registro Profesor
-  const handleRegisterProfessor = async () => {
-    if (!newProfessor.username || !newProfessor.password || !newProfessor.email) {
-      setErrorMessage('Por favor completa todos los campos.');
-      setSuccessMessage(''); // Limpiar mensaje de éxito
-      return;
-    }
-  
-    try {
-      const response = await fetch('https://miformadeaprender-all.onrender.com/auth/registro-profesor', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newProfessor),
-      });
-  
-      const data = await response.json();
-  
-      if (response.ok) {
-        setSuccessMessage('Profesor registrado exitosamente.'); // Mensaje de éxito
-        setErrorMessage(''); // Limpiar cualquier mensaje de error previo
-        setNewProfessor({ username: '', password: '', email: '' }); // Limpiar el formulario
-      } else {
-        setErrorMessage(data.message || 'Error al registrar el profesor.');
-        setSuccessMessage(''); // Limpiar mensaje de éxito
-      }
-    } catch (error) {
-      console.error('Error al enviar los datos:', error);
-      setErrorMessage('Ocurrió un error al registrar el profesor.');
-      setSuccessMessage(''); // Limpiar mensaje de éxito
-    }
-  };
-  
-  
-  
-  
 
   const handleDetailsClick = (student) => {
     alert(`Detalles de ${student.name}`);
@@ -241,7 +113,7 @@ const Tutor = () => {
   
 
   const openModal = () => {
-    setIsModalOpen(true);
+    navigate('/');
   };
 
   const closeModal = () => {
@@ -249,29 +121,10 @@ const Tutor = () => {
     setError('');
   };
 
-  const handleSecondaryAction = () => {
-    console.log("Nuevo botón presionado");
-    // Agregar aquí la lógica deseada (por ejemplo, abrir un modal o realizar otra acción)
-  };
-  
-
   const openTokensModal = () => {
     setIsTokensModalOpen(true);
     fetchTokenDetails();
   };
-
-  const toggleProfessorModal = () => {
-    setIsProfessorModalOpen(!isProfessorModalOpen);
-  };
-
-  const toggleSection = () => {
-  setIsProfessorSection(!isProfessorSection); // Alternar entre las secciones
-};
-
-  const closeProfessorModal = () => {
-    setIsProfessorModalOpen(false);
-  };
-
 
   const closeTokensModal = () => {
     setIsTokensModalOpen(false);
@@ -284,8 +137,6 @@ const Tutor = () => {
   const closeTokenDetailsModal = () => {
     setIsTokenDetailsModalOpen(false);
   };
-
-  
 
   const handleGenerateToken = async () => {
   if (newGroup.trim() === '') {
@@ -346,7 +197,7 @@ const Tutor = () => {
       <div className="navbar">
         <img src={logo} alt="Logo" className="navbar-logo" />
         <input type="text" placeholder="Buscar..." className="navbar-search" />
-        <button className="navbar-filter" onClick={toggleDropdown}>
+        <button className="navbar-filter1" onClick={toggleDropdown}>
           <FontAwesomeIcon icon={faFilter} /> Filtrar
         </button>
         {dropdownOpen && (
@@ -364,129 +215,10 @@ const Tutor = () => {
           </div>
         )}
         <button className="navbar-generate" onClick={openModal}>
-          Generar quiz
+          Cerrar Sesion
         </button>
-        <button className="navbar-generate fixed-token-button" onClick={openTokensModal}>
-          Tokens activos
-        </button>
-        <button className="bottom-left-button" onClick={toggleProfessorModal}>
-    Agregar profesor
-  </button>
-          
+       
       </div>
-
-      
-
-      {isProfessorModalOpen && (
-  <div className="modal-overlay">
-    <div className="modal-content">
-      <span className="card__title">{isProfessorSection ? 'Agregar Profesor' : 'Agregar Estudiante'}</span>
-      <p className="card__content">
-        {isProfessorSection ? 'Completa el formulario para agregar un nuevo profesor.' : 'Completa el formulario para agregar un nuevo estudiante.'}
-      </p>
-
-      <div className="card__form">
-        {isProfessorSection ? (
-          <>
-            {/* Formulario para Profesor */}
-            <input
-              placeholder="Nombre del profesor"
-              type="text"
-              className="modal-input"
-              value={newProfessor.username}
-              onChange={(e) => setNewProfessor({ ...newProfessor, username: e.target.value })}
-            />
-            <input
-              placeholder="Contraseña del profesor"
-              type="password"
-              className="modal-input"
-              value={newProfessor.password}
-              onChange={(e) => setNewProfessor({ ...newProfessor, password: e.target.value })}
-            />
-            <input
-              placeholder="Correo del profesor"
-              type="email"
-              className="modal-input"
-              value={newProfessor.email}
-              onChange={(e) => setNewProfessor({ ...newProfessor, email: e.target.value })}
-            />
-          </>
-        ) : (
-          <>
-        
-
-            {/* Combo de Profesores */}
-            <select
-  className="modal-input"
-  value={newStudent.professorId}
-  onChange={(e) => setNewStudent({ ...newStudent, professorId: e.target.value })}
->
-  <option value="">Selecciona un profesor</option>
-  {professors.length > 0 ? (
-    professors.map((professor) => (
-      <option key={professor.username} value={professor.username}> {/* Si solo tienes username, usa esto */}
-        {professor.username}
-      </option>
-    ))
-  ) : (
-    <option value="">No hay profesores disponibles</option>
-  )}
-</select>
-
-
-            {/* Combo de Grupos */}
-            <select
-              className="modal-input"
-              value={newStudent.groupId}
-              onChange={(e) => setNewStudent({ ...newStudent, groupId: e.target.value })}
-            >
-              <option value="">Selecciona un grupo</option>
-              {groups.map((group, index) => (
-                <option key={index} value={group.grupo}>
-                  {group.grupo}
-                </option>
-              ))}
-            </select>
-          </>
-        )}
-
-        {/* Mostrar el mensaje de error si existe */}
-        {errorMessage && (
-          <div style={{ color: '#fff', backgroundColor: '#ff4d4d', padding: '10px', borderRadius: '5px', marginTop: '10px', display: 'flex', alignItems: 'center' }}>
-            <span style={{ marginRight: '10px' }}>⚠️</span>
-            <p>{errorMessage}</p>
-          </div>
-        )}
-
-        {/* Mostrar el mensaje de éxito si existe */}
-        {successMessage && (
-          <div style={{ color: '#fff', backgroundColor: '#4CAF50', padding: '10px', borderRadius: '5px', marginTop: '10px', display: 'flex', alignItems: 'center' }}>
-            <span style={{ marginRight: '10px' }}>✔️</span>
-            <p>{successMessage}</p>
-          </div>
-        )}
-
-        <button className="sign-up" onClick={isProfessorSection ? handleRegisterProfessor : handleRegisterStudent}>
-          Registrar
-        </button>
-      </div>
-      <button className="modal-close" onClick={closeProfessorModal}>
-        Cerrar
-      </button>
-
-      {/* Botón para alternar entre formularios */}
-      <div style={{ marginTop: '10px', textAlign: 'center' }}>
-        <button onClick={toggleSection} style={{ padding: '5px 10px', backgroundColor: '#007BFF', color: 'white', border: 'none', borderRadius: '5px' }}>
-          {isProfessorSection ? 'Cambiar a Estudiante' : 'Cambiar a Profesor'}
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
-
-
-
 
       {isModalOpen && (
         <div className="modal-overlay">
@@ -569,4 +301,4 @@ const Tutor = () => {
   );
 };
 
-export default Tutor;
+export default Profesor;

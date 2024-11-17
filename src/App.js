@@ -22,7 +22,7 @@ const [grupo, setGrupo] = useState(''); // Estado para almacenar el grupo tempor
 
   const handleCuestionario = async () => {
     try {
-      const response = await fetch('https://miformadeaprender-verify.onrender.com/auth/verify', {
+      const response = await fetch('https://miformadeaprender-all.onrender.com/auth/verify', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -60,7 +60,7 @@ const [grupo, setGrupo] = useState(''); // Estado para almacenar el grupo tempor
     e.preventDefault(); // Previene el comportamiento por defecto del formulario
   
     try {
-      const response = await fetch('https://miformadeaprender-datos.onrender.com/auth/datos', {
+      const response = await fetch('https://miformadeaprender-all.onrender.com/auth/datos', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

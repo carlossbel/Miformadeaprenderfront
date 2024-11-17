@@ -22,8 +22,10 @@ const Login = () => {
   };
 
   const handleLogin = async () => {
+  
     try {
-      const response = await fetch('https://miformadeaprender-login.onrender.com/auth/login', {
+      console.log('Datos enviados:', { username, password });
+      const response = await fetch('https://miformadeaprender-all.onrender.com/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -37,11 +39,15 @@ const Login = () => {
         return;
       }
   
+      // Si la respuesta es exitosa, redirigimos a /tutor
+      navigate('/tutor');  // Redirección
+  
     } catch (error) {
       setError('Error de conexión al servidor');
       console.error('Error:', error);
     }
   };
+  
   
 
 console.log(SERVER);  
