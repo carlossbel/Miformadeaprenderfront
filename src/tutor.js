@@ -117,36 +117,39 @@ const Tutor = () => {
   
   
 
-  const handleRegisterStudent = async () => {
-    if (!newStudent.username || !newStudent.password || !newStudent.email || !newStudent.professorId || !newStudent.groupId) {
-      alert('Por favor completa todos los campos.');
+  const handleRegisterGrupo = async () => {
+    if (!newStudent.groupId || !newStudent.professorId) {
+      alert('Por favor selecciona un grupo y un profesor.');
       return;
     }
   
     try {
-      const response = await fetch('https://miformadeaprender-all.onrender.com/auth/registro-estudiante', {
+      const response = await fetch('https://miformadeaprender-all.onrender.com/auth/asignar', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(newStudent),
+        body: JSON.stringify({
+          grupo: newStudent.groupId,  // Nombre del grupo
+          profesor: newStudent.professorId, // ID del profesor
+        }),
       });
   
       const data = await response.json();
   
       if (response.ok) {
-        setErrorMessage(''); // Limpiar el mensaje de error
-        setSuccessMessage('Estudiante registrado exitosamente.');
-        setNewStudent({ username: '', password: '', email: '', professorId: '', groupId: '' }); // Limpiar el formulario
-        //closeStudentModal(); // Cerrar el modal
+        setErrorMessage('');
+        setSuccessMessage('Grupo y profesor registrados exitosamente.');
+        setNewStudent({ ...newStudent, groupId: '', professorId: '' }); // Limpiar campos
       } else {
-        setErrorMessage(data.message || 'Error al registrar el estudiante.');
+        setErrorMessage(data.message || 'Error al registrar el grupo.');
       }
     } catch (error) {
       console.error('Error al enviar los datos:', error);
-      setErrorMessage('Ocurrió un error al registrar el estudiante.');
+      setErrorMessage('Ocurrió un error al registrar el grupo.');
     }
   };
+  
 
   
   //Registro Profesor
@@ -416,37 +419,52 @@ const Tutor = () => {
         
 
             {/* Combo de Profesores */}
-            <select
+            <div>
+  {/* Combo de Profesores */}
+  <label htmlFor="professorId">Profesor:</label>
+  <select
+    className="modal-input"
+    id="professorId"
+    value={newStudent.professorId}
+    onChange={(e) => setNewStudent({ ...newStudent, professorId: e.target.value })}
+  >
+    <option value="">Selecciona un profesor</option>
+    {professors.length > 0 ? (
+      professors.map((professor) => (
+        <option key={professor.id} value={professor.id}>
+          {professor.username} {/* Aquí mostramos el nombre solo para que sea entendible para el usuario */}
+        </option>
+      ))
+    ) : (
+      <option value="">No hay profesores disponibles</option>
+    )}
+  </select>
+</div>
+
+
+<div>
+  {/* Combo de Grupos */}
+  <label htmlFor="groupId">Grupo:</label>
+  <select
   className="modal-input"
-  value={newStudent.professorId}
-  onChange={(e) => setNewStudent({ ...newStudent, professorId: e.target.value })}
+  id="groupId"
+  value={newStudent.groupId}
+  onChange={(e) => setNewStudent({ ...newStudent, groupId: e.target.value })}
 >
-  <option value="">Selecciona un profesor</option>
-  {professors.length > 0 ? (
-    professors.map((professor) => (
-      <option key={professor.username} value={professor.username}> {/* Si solo tienes username, usa esto */}
-        {professor.username}
+  <option value="">Selecciona un grupo</option>
+  {groups.length > 0 ? (
+    groups.map((group, index) => (
+      <option key={index} value={group.id}> {/* Usa `group.id` en lugar de `group.grupo` */}
+        {group.grupo}
       </option>
     ))
   ) : (
-    <option value="">No hay profesores disponibles</option>
+    <option value="">No hay grupos disponibles</option>
   )}
 </select>
 
+</div>
 
-            {/* Combo de Grupos */}
-            <select
-              className="modal-input"
-              value={newStudent.groupId}
-              onChange={(e) => setNewStudent({ ...newStudent, groupId: e.target.value })}
-            >
-              <option value="">Selecciona un grupo</option>
-              {groups.map((group, index) => (
-                <option key={index} value={group.grupo}>
-                  {group.grupo}
-                </option>
-              ))}
-            </select>
           </>
         )}
 
@@ -466,7 +484,7 @@ const Tutor = () => {
           </div>
         )}
 
-        <button className="sign-up" onClick={isProfessorSection ? handleRegisterProfessor : handleRegisterStudent}>
+        <button className="sign-up" onClick={isProfessorSection ? handleRegisterProfessor : handleRegisterGrupo}>
           Registrar
         </button>
       </div>
