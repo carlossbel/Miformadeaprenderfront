@@ -346,6 +346,13 @@ const Tutor = () => {
 
   return (
     <div className="tutor-container">
+      <div className="stars-container">
+            <FontAwesomeIcon icon={faStar} className="star-icon star-111" />
+            <FontAwesomeIcon icon={faStar} className="star-icon star-222" />
+            <FontAwesomeIcon icon={faStar} className="star-icon star-333" />
+            <FontAwesomeIcon icon={faStar} className="star-icon star-444" />
+            <FontAwesomeIcon icon={faStar} className="star-icon star-555" />
+          </div>
       <div className="navbar">
         <img src={logo} alt="Logo" className="navbar-logo" />
         <input type="text" placeholder="Buscar..." className="navbar-search" />
@@ -584,6 +591,8 @@ const Tutor = () => {
         </div>
       </div>
     </div>
+
+    
   );
 };
 

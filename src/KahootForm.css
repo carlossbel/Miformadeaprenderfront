@@ -1,27 +1,3 @@
-/*.kahoot-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-color: #f9f9f9;
-    padding: 20px;
-  }
-  
-   Contenedor principal que engloba la pregunta y las respuestas 
-  .kahoot-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    max-width: 1200px;
-    background-color: #e6e6ff;
-    padding: 40px;
-    border-radius: 20px;
-    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-  }
-    
   */
   .question-container {
     width: 100%; /* Abarca todo el ancho */
@@ -71,41 +47,132 @@
   }
   
   .options-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    display: flex; /* Alineación en fila */
+    justify-content: center; /* Centra las opciones horizontalmente */
+    gap: 20px; /* Espacio entre las respuestas */
     width: 100%;
   }
   
-  .kahoot-option {
-    font-size: 1.5rem;
-    padding: 50px;
-    background-color: #d9b3ff;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    text-align: center;
-  }
+ /* Estilo de los botones de las opciones */
+/* Estilo de los botones de las opciones */
+.kahoot-option {
+  color: white;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 2px solid #5A48E7;
+  padding: 10px 20px;
+  font-size: 17px;
+  cursor: pointer;
+  font-weight: bold;
+  background: transparent;
+  position: relative;
+  transition: all 1s;
+  overflow: hidden;
+  display: inline-block; /* Asegura que los botones se alineen correctamente */
+}
+
+.kahoot-option:hover {
+  color: white;
+}
+
+.kahoot-option::before {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 0%;
+  top: 0;
+  left: -40px;
+  transform: skewX(45deg);
+  background-color: #5A48E7;
+  z-index: -1;
+  transition: all 1s;
+}
+
+.kahoot-option:hover::before {
+  width: 160%;
+}
+
+/* Para asegurar que el contenedor de las opciones use flexbox de manera correcta */
+.options-container {
+  display: flex; /* Alineación en fila */
+  justify-content: center; /* Centra las opciones horizontalmente */
+  gap: 20px; /* Espacio entre las respuestas */
+  width: 100%;
+  flex-wrap: wrap; /* Para manejar casos de pantalla más pequeña */
+}
+
+
   
-  .kahoot-option:hover {
-    background-color: #b580d9;
+  /* Estilo del botón "Siguiente" con el nuevo diseño */
+.next-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.next-button {
+  font-family: inherit;
+  font-size: 20px;
+  background: #5A48E7;
+  color: white;
+  padding: 0.7em 1em;
+  padding-left: 0.9em;
+  display: flex;
+  align-items: center;
+  border: none;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.next-button span {
+  display: block;
+  margin-left: 0.3em;
+  transition: all 0.3s ease-in-out;
+}
+
+.next-button svg {
+  display: block;
+  transform-origin: center center;
+  transition: transform 0.3s ease-in-out;
+}
+
+.next-button:hover .svg-wrapper {
+  animation: fly-1 0.6s ease-in-out infinite alternate;
+}
+
+.next-button:hover svg {
+  transform: translateX(1.2em) rotate(45deg) scale(1.1);
+}
+
+.next-button:hover span {
+  transform: translateX(5em);
+}
+
+.next-button:active {
+  transform: scale(0.95);
+}
+
+/* Animación para los botones */
+@keyframes fly-1 {
+  from {
+    transform: translateY(0.1em);
   }
-  
-  .stars-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 40px;
+
+  to {
+    transform: translateY(-0.1em);
   }
+}
+
   
 
   
-  .star-1 { transform: rotate(10deg); }
-  .star-2 { transform: rotate(-10deg); }
-  .star-3 { transform: rotate(20deg); }
-  .star-4 { transform: rotate(-20deg); }
-  .star-5 { transform: rotate(5deg); }
+.star-12 { top: 15%; left: 5%; }
+.star-23 { top: 5%; left: 40%; }
+.star-34 { top: 80%; left: 30%; }
+.star-45 { top: 70%; left: 70%; }
+.star-56 { top: 10%; left: 90%; }
   
 
   .timer-container {
@@ -121,4 +188,54 @@
     align-items: center;
     justify-content: center;
     font-size: 24px;
+}
+
+
+
+.kahoot-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.kahoot-box {
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background: #f9f9f9;
+}
+
+.kahoot-question {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.options-container {
+  display: flex;
+  gap: 10px;
+}
+
+.kahoot-option {
+  padding: 10px 15px;
+  background: #5A48E7;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.kahoot-option.selected {
+  background: #5A48E7;
+  color: white;
+}
+
+.kahoot-option:hover {
+  background: #c8c8c8;
+}
+
+.responses-summary {
+  margin-top: 20px;
+  background: #fff3cd;
+  padding: 10px;
+  border-radius: 5px;
 }
