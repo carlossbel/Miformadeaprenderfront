@@ -66,7 +66,12 @@ const KahootForm = () => {
   };
 
   if (questions.length === 0) {
-    return <div>Cargando preguntas...</div>; // Si no hay preguntas, muestra "Cargando preguntas..."
+    return (
+      <div className="loader">
+        <span className="loader-text">Cargando..</span>
+        <span className="load"></span>
+      </div>
+    );
   }
 
   const currentQuestion = questions[currentQuestionIndex];
