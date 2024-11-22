@@ -81,51 +81,161 @@
 }
 
 /* Lista de Alumnos */
+/* Estilo general para el contenedor de la lista de estudiantes */
 .students-list {
   display: flex;
-  flex-direction: column;
-  gap: 15px; /* Más espacio entre filas de alumnos */
-  max-height: 800px; /* Altura máxima para mostrar la barra de desplazamiento */
-  overflow-y: auto; /* Habilita la barra de desplazamiento vertical */
-  padding: 20px 0; /* Espaciado interno */
-  border: 1px solid #ddd; /* Agrega borde alrededor de la lista */
-  border-radius: 5px; /* Esquinas redondeadas */
-  background-color: #f9f9f9; /* Color de fondo para la lista */
-  width: 100%; /* Ocupar todo el ancho de la pantalla */
-  margin: 0; /* Elimina márgenes */
-  font-size: 18px; /* Aumentado de 16px a 18px */
+  flex-direction: column; /* Esto coloca los elementos de manera vertical */
+  gap: 20px; /* Espacio entre cada profesor */
+  padding: 20px;
 }
 
-/* Estilo para cada fila de alumnos */
-.student-row {
-  display: flex;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  padding: 20px 50px; /* Incrementado el padding para mayor espacio */
-  border-radius: 5px;
-  align-items: center;
-  gap: 300px; /* Espacio entre columnas */
-  font-size: 18px; /* Aumentado de 16px a 18px */
+/* Estilo general para cada profesor */
+.professor-group {
+  margin-bottom: 20px;
+  padding: 25px; /* Aumentar el padding para dar más espacio dentro de la caja */
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 80%; /* Ajustamos el ancho de la caja al 80% de su contenedor, puedes cambiar este valor */
+  max-width: 900px; /* Máximo ancho para no hacerlo demasiado grande en pantallas grandes */
+  margin-left: auto; /* Centrar la caja horizontalmente */
+  margin-right: auto; /* Centrar la caja horizontalmente */
 }
 
-/* Estilos para los datos del alumno */
-.student-name {
-  flex: 1;
+
+/* Estilo para el nombre del profesor */
+.professor-name {
+  font-size: 28px; /* Tamaño de fuente más grande */
   font-weight: bold;
-  font-size: 20px; /* Aumentado de 18px a 20px */
+  color: #333;
+  margin: 0;
 }
 
-.student-email {
-  flex: 2;
-  font-size: 20px; /* Aumentado de 18px a 20px */
+/* Contenedor de los grupos asignados */
+.groups-container {
+  display: flex;
+  flex-direction: column; /* Los elementos dentro de este contenedor estarán en forma de columna */
+  gap: 10px;
 }
 
-.student-style {
-  flex: 1;
-  text-align: right;
-  font-style: italic;
-  font-size: 20px; /* Aumentado de 18px a 20px */
+/* Estilo para el título de "Grupos asignados" */
+.groups-container p {
+  font-size: 18px;
+  color: #555;
+  margin: 0;
 }
+
+/* Estilo para los recuadros de los grupos */
+.group-boxes {
+  display: flex;
+  flex-direction: column; /* Los recuadros de grupos estarán en una sola columna */
+  gap: 10px;
+}
+
+/* Estilo para cada recuadro de grupo */
+.group-box {
+  background-color: #4CAF50;
+  color: white;
+  padding: 15px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover effect para los recuadros de los grupos */
+.group-box:hover {
+  background-color: #45a049;
+}
+
+/* Estilo cuando no se encuentran profesores */
+/* General styling for the list container */
+.students-list {
+  display: flex;
+  flex-direction: column; /* Arrange the items vertically */
+  gap: 20px; /* Space between each professor's item */
+  padding: 20px;
+  max-height: 80vh; /* Limit height of the list */
+  overflow-y: auto; /* Add scroll for overflowing items */
+}
+
+/* Styling for each professor item */
+.professor-group {
+  margin-bottom: 20px;
+  padding: 25px; /* Aumentar el padding para dar más espacio dentro de la caja */
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 80%; /* Ajustamos el ancho de la caja al 80% de su contenedor, puedes cambiar este valor */
+  max-width: 900px; /* Máximo ancho para no hacerlo demasiado grande en pantallas grandes */
+  margin-left: auto; /* Centrar la caja horizontalmente */
+  margin-right: auto; /* Centrar la caja horizontalmente */
+}
+
+
+/* Hover effect for the professor box */
+.professor-group:hover {
+  transform: scale(1.05); /* Slightly scale up on hover */
+}
+
+/* Professor name styling */
+.professor-name {
+  font-size: 30px; /* Larger font size for the professor's name */
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+}
+
+/* Styling for the groups container */
+.groups-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Styling for the 'Groups Assigned' label */
+.groups-container p {
+  font-size: 18px;
+  color: #666;
+  margin: 0;
+}
+
+/* Styling for the group boxes */
+.group-boxes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Styling for each individual group box */
+.group-box {
+  background-color: #4CAF50;
+  color: white;
+  padding: 15px 20px;
+  border-radius: 10px;
+  font-size: 18px; /* Increase font size for group names */
+  font-weight: bold;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover effect for the group boxes */
+.group-box:hover {
+  background-color: #45a049;
+}
+
+/* Styling when no professors are found */
+.students-list p {
+  font-size: 22px;
+  color: #777;
+  text-align: center;
+}
+
 
 .back-btn:hover {
   background-color: #5a009e;
@@ -560,3 +670,150 @@ border-radius: 5px; /* Bordes redondeados */
 .sign-up:hover {
   opacity: 0.8;
 } 
+
+
+
+
+/* Estilo general para el contenedor de profesores */
+.professor-group {
+  margin-bottom: 20px;
+  padding: 25px; /* Aumentar el padding para dar más espacio dentro de la caja */
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 80%; /* Ajustamos el ancho de la caja al 80% de su contenedor, puedes cambiar este valor */
+  max-width: 900px; /* Máximo ancho para no hacerlo demasiado grande en pantallas grandes */
+  margin-left: auto; /* Centrar la caja horizontalmente */
+  margin-right: auto; /* Centrar la caja horizontalmente */
+}
+
+
+/* Estilo para el nombre del profesor */
+.professor-name {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+/* Contenedor de grupos asignados */
+.groups-container {
+  margin-top: 10px;
+}
+
+/* Estilo para el título de "Grupos asignados" */
+.groups-container p {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+/* Estilo para los recuadros de los grupos */
+.group-boxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Estilo individual de cada recuadro de grupo */
+.group-box {
+  background-color: #6c63ff;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover effect para los recuadros de los grupos */
+.group-box:hover {
+  background-color: #6c63ff;
+}
+
+
+
+
+/* Contenedor principal que ocupa toda la pantalla */
+.main-content1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* Alineación hacia arriba */
+  width: 1800px;
+  height: 80vh; /* Ocupa el 100% del alto de la pantalla */
+  overflow-y: auto;
+  overflow-x: auto; /* Activa el scroll vertical si hay mucho contenido */
+  padding: 20px;
+  background-color: #f3f3f3;
+  box-sizing: border-box; /* Incluye el padding en el tamaño total */
+}
+
+/* Título del grupo */
+.group-title1 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px; /* Espacio entre el título y la lista */
+  text-align: center;
+  width: 100%;
+}
+
+/* Lista de profesores y sus grupos */
+.students-list1 {
+  display: flex;
+  flex-direction: column;
+  gap: 50px; /* Espacio entre los elementos de la lista */
+  width: 200%;
+  max-width: 800px; /* Limita el ancho máximo en pantallas grandes */
+}
+
+/* Tarjeta de cada profesor */
+.professor-group1 {
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Estilo del nombre del profesor */
+.professor-name1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #6c63ff;
+  margin-bottom: 10px;
+}
+
+/* Contenedor de grupos asignados */
+.groups-container1 {
+  margin-top: 10px;
+}
+
+.groups-container1 p {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+/* Cajas de los grupos */
+.group-boxes1 {
+  display: flex;
+  flex-wrap: wrap; /* Ajusta a varias filas si es necesario */
+  gap: 10px; /* Espacio entre las cajas */
+}
+
+.group-box1 {
+  padding: 10px 15px;
+  background-color: #f0f0f0;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  text-align: center;
+}
+

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import logo from './Logo_morado.png';
 import './tutor.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar, faFilter, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faFilter, faSearch, faHome } from '@fortawesome/free-solid-svg-icons';
 
 const Tutor = () => {
   const navigate = useNavigate();
@@ -28,6 +28,9 @@ const Tutor = () => {
   const [groups, setGroups] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [professorsWithGroups, setProfessorsWithGroups] = useState([]);
+  
+
   const [isProfessorSection, setIsProfessorSection] = useState(true);
   const [professors, setProfessors] = useState([]); // Lista de profesores
   const [newStudent, setNewStudent] = useState({
@@ -42,23 +45,38 @@ const Tutor = () => {
   
 
 
-  useEffect(() => {
-    const fetchGrupos = async () => {
-      try {
-        const response = await fetch('https://miformadeaprender-all.onrender.com/auth/buscar'); // Asegúrate de que la ruta sea correcta
-        if (response.ok) {
-          const data = await response.json();
-          setGroups(data.grupos); // Aquí usamos 'setGroups' en lugar de 'setGrupos'
+  const ProfessorsWithGroups = async () => {
+    try {
+      const response = await fetch('https://miformadeaprender-all.onrender.com/auth/profesores-grupo');
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data); // Verifica cómo se ven los datos
+        if (Array.isArray(data.professors)) {
+          setProfessorsWithGroups(data.professors); // Actualiza el estado
         } else {
-          console.error('Error al obtener los grupos');
+          console.error('La API no devolvió un arreglo válido.');
+          setProfessorsWithGroups([]); // Maneja el error adecuadamente
         }
-      } catch (error) {
-        console.error('Error de conexión al servidor', error);
+      } else {
+        console.error('Error al obtener profesores y grupos. Código:', response.status);
+        setProfessorsWithGroups([]);
       }
-    };
+    } catch (error) {
+      console.error('Error de conexión al servidor:', error);
+      setProfessorsWithGroups([]);
+    }
+  };
   
-    fetchGrupos();
-  }, []); 
+
+  useEffect(() => {
+    ProfessorsWithGroups();
+  }, []);
+  
+  
+  const handleBack = () => {
+    navigate('/');
+  };
+  
 
   const handleBuscar = (newGroup) => {
     setSelectedGroup(newGroup);
@@ -66,24 +84,7 @@ const Tutor = () => {
 
 
   //Mostrar grupos en combo 
-  useEffect(() => {
-    const fetchGrupos = async () => {
-      try {
-        const response = await fetch('https://miformadeaprender-all.onrender.com/auth/buscar');
-        if (response.ok) {
-          const data = await response.json();
-          // Asegúrate de que la respuesta tiene la clave 'grupos' con el array de grupos
-          setGroups(data.grupos); // Asignamos la respuesta de los grupos al estado
-        } else {
-          console.error('Error al obtener los grupos');
-        }
-      } catch (error) {
-        console.error('Error de conexión al servidor', error);
-      }
-    };
-  
-    fetchGrupos();
-  }, []);
+ 
 
   const handleBackClick = () => {
     navigate('/');
@@ -96,24 +97,7 @@ const Tutor = () => {
   });
 
   
-  useEffect(() => {
-    const fetchProfessors = async () => {
-      try {
-        const response = await fetch('https://miformadeaprender-all.onrender.com/auth/getProfesores');
-        const data = await response.json();
   
-        if (response.ok) {
-          setProfessors(data.professors); // Guardamos los profesores en el estado
-        } else {
-          console.error('Error:', data.message);
-        }
-      } catch (error) {
-        console.error('Error al obtener los profesores:', error);
-      }
-    };
-  
-    fetchProfessors(); // Llamamos a la función cuando se monta el componente
-  }, []);
   
   
 
@@ -347,32 +331,20 @@ const Tutor = () => {
   return (
     <div className="tutor-container">
       <div className="stars-container">
-            <FontAwesomeIcon icon={faStar} className="star-icon star-111" />
-            <FontAwesomeIcon icon={faStar} className="star-icon star-222" />
-            <FontAwesomeIcon icon={faStar} className="star-icon star-333" />
-            <FontAwesomeIcon icon={faStar} className="star-icon star-444" />
-            <FontAwesomeIcon icon={faStar} className="star-icon star-555" />
-          </div>
+        <FontAwesomeIcon icon={faStar} className="star-icon star-111" />
+        <FontAwesomeIcon icon={faStar} className="star-icon star-222" />
+        <FontAwesomeIcon icon={faStar} className="star-icon star-333" />
+        <FontAwesomeIcon icon={faStar} className="star-icon star-444" />
+        <FontAwesomeIcon icon={faStar} className="star-icon star-555" />
+      </div>
       <div className="navbar">
         <img src={logo} alt="Logo" className="navbar-logo" />
         <input type="text" placeholder="Buscar..." className="navbar-search" />
-        <button className="navbar-filter" onClick={toggleDropdown}>
-          <FontAwesomeIcon icon={faFilter} /> Filtrar
+        <button className="navbar-filter" onClick={handleBack}>
+          <FontAwesomeIcon icon={faHome} /> Inicio
+        
         </button>
-        {dropdownOpen && (
-          <div className="dropdown-menu">
-           {groups.length > 0 ? (
-  groups.map((group, index) => (
-    <div key={index} onClick={() => handleGroupChange(group.grupo)}>
-      {group.grupo}
-    </div>
-  ))
-) : (
-  <p>No se encontraron grupos</p>
-)}
-
-          </div>
-        )}
+    
         <button className="navbar-generate" onClick={openModal}>
           Generar quiz
         </button>
@@ -380,139 +352,116 @@ const Tutor = () => {
           Tokens activos
         </button>
         <button className="bottom-left-button" onClick={toggleProfessorModal}>
-    Agregar profesor
-  </button>
-          
+          Agregar profesor
+        </button>
       </div>
-
-      
-
+  
       {isProfessorModalOpen && (
-  <div className="modal-overlay">
-    <div className="modal-content">
-      <span className="card__title">{isProfessorSection ? 'Agregar Profesor' : 'Agregar Estudiante'}</span>
-      <p className="card__content">
-        {isProfessorSection ? 'Completa el formulario para agregar un nuevo profesor.' : 'Completa el formulario para agregar un nuevo estudiante.'}
-      </p>
-
-      <div className="card__form">
-        {isProfessorSection ? (
-          <>
-            {/* Formulario para Profesor */}
-            <input
-              placeholder="Nombre del profesor"
-              type="text"
-              className="modal-input"
-              value={newProfessor.username}
-              onChange={(e) => setNewProfessor({ ...newProfessor, username: e.target.value })}
-            />
-            <input
-              placeholder="Contraseña del profesor"
-              type="password"
-              className="modal-input"
-              value={newProfessor.password}
-              onChange={(e) => setNewProfessor({ ...newProfessor, password: e.target.value })}
-            />
-            <input
-              placeholder="Correo del profesor"
-              type="email"
-              className="modal-input"
-              value={newProfessor.email}
-              onChange={(e) => setNewProfessor({ ...newProfessor, email: e.target.value })}
-            />
-          </>
-        ) : (
-          <>
-        
-
-            {/* Combo de Profesores */}
-            <div>
-  {/* Combo de Profesores */}
-  <label htmlFor="professorId">Profesor:</label>
-  <select
-    className="modal-input"
-    id="professorId"
-    value={newStudent.professorId}
-    onChange={(e) => setNewStudent({ ...newStudent, professorId: e.target.value })}
-  >
-    <option value="">Selecciona un profesor</option>
-    {professors.length > 0 ? (
-      professors.map((professor) => (
-        <option key={professor.id} value={professor.id}>
-          {professor.username} {/* Aquí mostramos el nombre solo para que sea entendible para el usuario */}
-        </option>
-      ))
-    ) : (
-      <option value="">No hay profesores disponibles</option>
-    )}
-  </select>
-</div>
-
-
-<div>
-  {/* Combo de Grupos */}
-  <label htmlFor="groupId">Grupo:</label>
-  <select
-  className="modal-input"
-  id="groupId"
-  value={newStudent.groupId}
-  onChange={(e) => setNewStudent({ ...newStudent, groupId: e.target.value })}
->
-  <option value="">Selecciona un grupo</option>
-  {groups.length > 0 ? (
-    groups.map((group, index) => (
-      <option key={index} value={group.id}> {/* Usa `group.id` en lugar de `group.grupo` */}
-        {group.grupo}
-      </option>
-    ))
-  ) : (
-    <option value="">No hay grupos disponibles</option>
-  )}
-</select>
-
-</div>
-
-          </>
-        )}
-
-        {/* Mostrar el mensaje de error si existe */}
-        {errorMessage && (
-          <div style={{ color: '#fff', backgroundColor: '#ff4d4d', padding: '10px', borderRadius: '5px', marginTop: '10px', display: 'flex', alignItems: 'center' }}>
-            <span style={{ marginRight: '10px' }}>⚠️</span>
-            <p>{errorMessage}</p>
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <span className="card__title">{isProfessorSection ? 'Agregar Profesor' : 'Agregar Estudiante'}</span>
+            <p className="card__content">
+              {isProfessorSection ? 'Completa el formulario para agregar un nuevo profesor.' : 'Completa el formulario para agregar un nuevo estudiante.'}
+            </p>
+            <div className="card__form">
+              {isProfessorSection ? (
+                <>
+                  <input
+                    placeholder="Nombre del profesor"
+                    type="text"
+                    className="modal-input"
+                    value={newProfessor.username}
+                    onChange={(e) => setNewProfessor({ ...newProfessor, username: e.target.value })}
+                  />
+                  <input
+                    placeholder="Contraseña del profesor"
+                    type="password"
+                    className="modal-input"
+                    value={newProfessor.password}
+                    onChange={(e) => setNewProfessor({ ...newProfessor, password: e.target.value })}
+                  />
+                  <input
+                    placeholder="Correo del profesor"
+                    type="email"
+                    className="modal-input"
+                    value={newProfessor.email}
+                    onChange={(e) => setNewProfessor({ ...newProfessor, email: e.target.value })}
+                  />
+                </>
+              ) : (
+                <>
+                  <div>
+                    <label htmlFor="professorId">Profesor:</label>
+                    <select
+                      className="modal-input"
+                      id="professorId"
+                      value={newStudent.professorId}
+                      onChange={(e) => setNewStudent({ ...newStudent, professorId: e.target.value })}
+                    >
+                      <option value="">Selecciona un profesor</option>
+                      {professors.length > 0 ? (
+                        professors.map((professor) => (
+                          <option key={professor.id} value={professor.id}>
+                            {professor.username}
+                          </option>
+                        ))
+                      ) : (
+                        <option value="">No hay profesores disponibles</option>
+                      )}
+                    </select>
+                  </div>
+  
+                  <div>
+                    <label htmlFor="groupId">Grupo:</label>
+                    <select
+                      className="modal-input"
+                      id="groupId"
+                      value={newStudent.groupId}
+                      onChange={(e) => setNewStudent({ ...newStudent, groupId: e.target.value })}
+                    >
+                      <option value="">Selecciona un grupo</option>
+                      {groups.length > 0 ? (
+                        groups.map((group, index) => (
+                          <option key={index} value={group.id}>
+                            {group.grupo}
+                          </option>
+                        ))
+                      ) : (
+                        <option value="">No hay grupos disponibles</option>
+                      )}
+                    </select>
+                  </div>
+                </>
+              )}
+  
+              {errorMessage && (
+                <div style={{ color: '#fff', backgroundColor: '#ff4d4d', padding: '10px', borderRadius: '5px', marginTop: '10px', display: 'flex', alignItems: 'center' }}>
+                  <span style={{ marginRight: '10px' }}>⚠️</span>
+                  <p>{errorMessage}</p>
+                </div>
+              )}
+  
+              {successMessage && (
+                <div style={{ color: '#fff', backgroundColor: '#4CAF50', padding: '10px', borderRadius: '5px', marginTop: '10px', display: 'flex', alignItems: 'center' }}>
+                  <span style={{ marginRight: '10px' }}>✔️</span>
+                  <p>{successMessage}</p>
+                </div>
+              )}
+  
+              <button className="sign-up" onClick={isProfessorSection ? handleRegisterProfessor : handleRegisterGrupo}>
+                Registrar
+              </button>
+            </div>
+            <button className="modal-close" onClick={closeProfessorModal}>Cerrar</button>
+            <div style={{ marginTop: '10px', textAlign: 'center' }}>
+              <button onClick={toggleSection} style={{ padding: '5px 10px', backgroundColor: '#007BFF', color: 'white', border: 'none', borderRadius: '5px' }}>
+                {isProfessorSection ? 'Cambiar a Estudiante' : 'Cambiar a Profesor'}
+              </button>
+            </div>
           </div>
-        )}
-
-        {/* Mostrar el mensaje de éxito si existe */}
-        {successMessage && (
-          <div style={{ color: '#fff', backgroundColor: '#4CAF50', padding: '10px', borderRadius: '5px', marginTop: '10px', display: 'flex', alignItems: 'center' }}>
-            <span style={{ marginRight: '10px' }}>✔️</span>
-            <p>{successMessage}</p>
-          </div>
-        )}
-
-        <button className="sign-up" onClick={isProfessorSection ? handleRegisterProfessor : handleRegisterGrupo}>
-          Registrar
-        </button>
-      </div>
-      <button className="modal-close" onClick={closeProfessorModal}>
-        Cerrar
-      </button>
-
-      {/* Botón para alternar entre formularios */}
-      <div style={{ marginTop: '10px', textAlign: 'center' }}>
-        <button onClick={toggleSection} style={{ padding: '5px 10px', backgroundColor: '#007BFF', color: 'white', border: 'none', borderRadius: '5px' }}>
-          {isProfessorSection ? 'Cambiar a Estudiante' : 'Cambiar a Profesor'}
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
-
-
-
-
+        </div>
+      )}
+  
       {isModalOpen && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -525,32 +474,24 @@ const Tutor = () => {
               className="modal-input"
             />
             {error && <p className="error-message">{error}</p>}
-            <button className="modal-button" onClick={handleGenerateToken}>
-              Generar token
-            </button>
-            <button className="modal-close" onClick={closeModal}>
-              Cerrar
-            </button>
+            <button className="modal-button" onClick={handleGenerateToken}>Generar token</button>
+            <button className="modal-close" onClick={closeModal}>Cerrar</button>
           </div>
         </div>
       )}
-
-      {/* Modal para mostrar detalles del token generado */}
+  
       {isTokenDetailsModalOpen && (
-  <div className="modal-overlay">
-    <div className="modal-content">
-      <h3>Detalles del Token Generado</h3>
-      <p><strong>Grupo:</strong> {newGroup}</p>
-      <p><strong>Token:</strong> {token}</p>
-      <p><strong>Tiempo restante:</strong> {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}</p>
-      <button className="modal-close" onClick={closeTokenDetailsModal}>
-        Cerrar
-      </button>
-    </div>
-  </div>
-)}
-
-
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>Detalles del Token Generado</h3>
+            <p><strong>Grupo:</strong> {newGroup}</p>
+            <p><strong>Token:</strong> {token}</p>
+            <p><strong>Tiempo restante:</strong> {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}</p>
+            <button className="modal-close" onClick={closeTokenDetailsModal}>Cerrar</button>
+          </div>
+        </div>
+      )}
+  
       {isTokensModalOpen && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -568,32 +509,39 @@ const Tutor = () => {
             ) : (
               <p>No hay tokens activos.</p>
             )}
-            <button className="modal-close" onClick={closeTokensModal}>
-              Cerrar
-            </button>
+            <button className="modal-close" onClick={closeTokensModal}>Cerrar</button>
           </div>
         </div>
       )}
-
-      <div className="main-content">
-        <h2 className="group-title">{selectedGroup}</h2>
-        <div className="students-list">
-        {students.map((student, index) => (
-            <div key={index} className="student-row">
-              <div className="student-name"><strong>Nombre: </strong>{student.username}</div>
-              <div className="student-email"><strong>Correo: </strong>{student.email}</div>
-              <div className="student-grupo"><strong>Grupo: </strong>{student.grupo}</div>
-              <button className="details-button" onClick={() => handleDetailsClick(student)}>
-                Detalles
-              </button>
+  
+  <div className="main-content1">
+  <h2 className="group-title1">{selectedGroup}</h2>
+  <div className="students-list1">
+    {professorsWithGroups.length > 0 ? (
+      professorsWithGroups.map((professor) => (
+        <div key={professor.profesor_id} className="professor-group1">
+          <p className="professor-name1"><strong>{professor.profesor_nombre}</strong></p>
+          <div className="groups-container1">
+            <p><strong>Grupos asignados:</strong></p>
+            <div className="group-boxes1">
+              {professor.grupos_asignados.map((group, index) => (
+                <div key={index} className="group-box1">
+                  {group}
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
-      </div>
+      ))
+    ) : (
+      <p>No se encontraron profesores.</p>
+    )}
+  </div>
+</div>
+
     </div>
-
-    
   );
-};
 
+  
+};
 export default Tutor;

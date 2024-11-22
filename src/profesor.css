@@ -452,3 +452,10 @@
     border-radius: 5px;
   }
   
+
+  /*Estrellas del fondo*/
+  .star-66 { top: 15%; left: 5%; }
+.star-77 { top: 10%; left: 50%; }
+.star-88 { top: 80%; left: 20%; }
+.star-99 { top: 80%; left: 80%; }
+.star-100 { top: 10%; left: 90%; }

@@ -194,6 +194,14 @@ const Profesor = () => {
 
   return (
     <div className="tutor-container">
+      <div className="stars-container">
+            <FontAwesomeIcon icon={faStar} className="star-icon star-66" />
+            <FontAwesomeIcon icon={faStar} className="star-icon star-77" />
+            <FontAwesomeIcon icon={faStar} className="star-icon star-88" />
+            <FontAwesomeIcon icon={faStar} className="star-icon star-99" />
+            <FontAwesomeIcon icon={faStar} className="star-icon star-100" />
+          </div>
+      <div className="navbar"></div>
       <div className="navbar">
         <img src={logo} alt="Logo" className="navbar-logo" />
         <input type="text" placeholder="Buscar..." className="navbar-search" />

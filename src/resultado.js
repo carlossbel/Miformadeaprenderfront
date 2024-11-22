@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; 
 import './resultado.css';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
@@ -6,19 +6,51 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Resultado = () => {
     const navigate = useNavigate();
-    const resultados = useMemo(() => [
-        { estilo: "Visual", porcentaje: 40 },
-        { estilo: "Auditivo", porcentaje: 25 },
-        { estilo: "Kinestésico", porcentaje: 35 }
-    ], []);
+    const [resultados, setResultados] = useState([]);
+    const [progress, setProgress] = useState([0, 0, 0]);
 
-    const handleBackClick = () => {
-        navigate('/'); 
-      };
+    const [userId, setUserId] = useState(null);
 
-    const [progress, setProgress] = useState(resultados.map(() => 0));
+    // Obtener el userId de localStorage
+    useEffect(() => {
+        const storedUserId = localStorage.getItem('userId');
+        if (!storedUserId) {
+            console.error('No se encontró el ID del usuario.');
+            navigate('/'); // Redirige al inicio si no hay ID
+        } else {
+            setUserId(storedUserId);
+            console.log('Usuario actual con ID:', storedUserId);
+        }
+    }, [navigate]);
 
-    useMemo(() => {
+    // Obtener los resultados desde la API cuando el userId esté disponible
+    useEffect(() => {
+        if (userId) {
+            const fetchResultados = async () => {
+                try {
+                    const response = await fetch(`https://miformadeaprender-all.onrender.com/auth/getpuntos/${userId}`);
+                    
+                    const data = await response.json();
+
+                    if (response.status !== 200) {
+                        console.error(data.error);
+                    } else {
+                        setResultados([
+                            { estilo: "Visual", porcentaje: parseFloat(data.visual) },
+                            { estilo: "Auditivo", porcentaje: parseFloat(data.auditivo) },
+                            { estilo: "Kinestésico", porcentaje: parseFloat(data.kinestesico) },
+                        ]);
+                    }
+                } catch (error) {
+                    console.error('Error al obtener los resultados:', error);
+                }
+            };
+
+            fetchResultados();
+        }
+    }, [userId]);
+
+    useEffect(() => {
         const intervalIds = resultados.map((resultado, index) => {
             return setInterval(() => {
                 setProgress((prevProgress) => {
@@ -36,12 +68,19 @@ const Resultado = () => {
         return () => intervalIds.forEach((id) => clearInterval(id));
     }, [resultados]);
 
-    const pMin = resultados.reduce((min, item) =>
+    const handleBackClick = () => {
+        navigate('/'); 
+    };
+
+    const pMin = resultados.length > 0 
+    ? resultados.reduce((min, item) =>
         item.porcentaje < min.porcentaje ? item : min
-    );
+      )
+    : null;
 
     let x;
-    switch(pMin.estilo) {
+if (pMin && pMin.estilo) { // Asegúrate de que pMin no sea null
+    switch (pMin.estilo) {
         case 'Kinestésico':
             x = 'https://www.ejemploKinestesico.com';
             break;
@@ -55,6 +94,10 @@ const Resultado = () => {
             x = 'https://www.nohaylink.com';
             break;
     }
+} else {
+    x = 'https://www.nohaylink.com'; // URL predeterminada si no hay datos
+}
+
 
     return (
         <div className="resultado-contenedor">
@@ -70,13 +113,17 @@ const Resultado = () => {
                                 style={{ width: `${progress[index]}%` }}
                             ></div>
                         </div>
-                        <p className="porcentaje">{progress[index]}%</p>
+                        <p className="porcentaje">{Math.round(progress[index])}%</p>
                     </div>
                 ))}
                 <p>
-                    Para mejorar tu rendimiento en el área de <b>{pMin.estilo}</b>, te recomendamos revisar la siguiente información.
-                    <br/>
-                    <a className='vinculo' href={x} target="_blank" rel="noopener noreferrer">Visitar Ejemplo</a>
+                    Para mejorar tu rendimiento en el área de <b>{pMin && (
+    <p>
+        Para mejorar tu rendimiento en el área de <b>{pMin.estilo}</b>, te recomendamos revisar la siguiente información.
+        <br />
+        <a className='vinculo' href={x} target="_blank" rel="noopener noreferrer">Visitar Ejemplo</a>
+    </p>
+)}</b>
                 </p>
             </div>
             <button className="cta" onClick={handleBackClick}>
@@ -85,15 +132,15 @@ const Resultado = () => {
                     <path d="M1,5 L11,5"></path>
                     <polyline points="8 1 12 5 8 9"></polyline>
                 </svg>
-                </button>
+            </button>
 
-                <div className="stars-container">
-        <FontAwesomeIcon icon={faStar} className="star-icon star-6" />
-        <FontAwesomeIcon icon={faStar} className="star-icon star-7" />
-        <FontAwesomeIcon icon={faStar} className="star-icon star-8" />
-        <FontAwesomeIcon icon={faStar} className="star-icon star-9" />
-        <FontAwesomeIcon icon={faStar} className="star-icon star-10" />
-      </div>
+            <div className="stars-container">
+                <FontAwesomeIcon icon={faStar} className="star-icon star-6" />
+                <FontAwesomeIcon icon={faStar} className="star-icon star-7" />
+                <FontAwesomeIcon icon={faStar} className="star-icon star-8" />
+                <FontAwesomeIcon icon={faStar} className="star-icon star-9" />
+                <FontAwesomeIcon icon={faStar} className="star-icon star-10" />
+            </div>
         </div>
     );
 };

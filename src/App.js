@@ -81,6 +81,7 @@ const [grupo, setGrupo] = useState(''); // Estado para almacenar el grupo tempor
   
       const data = await response.json();
       console.log(data); // Log para depuración
+      localStorage.setItem('userId', data.insertId);
   
       closeModal(); // Cierra la modal después de enviar
       setPin(''); // Limpia el PIN

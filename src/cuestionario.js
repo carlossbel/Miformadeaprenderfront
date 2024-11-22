@@ -10,7 +10,16 @@ const KahootForm = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); // Comienza en la primera pregunta
   const [selectedOption, setSelectedOption] = useState(null);
   const [isAnswered, setIsAnswered] = useState(false);
+  const [visualPoints, setVisualPoints] = useState(0); // Puntos acumulados para visual
+  const [auditivoPoints, setAuditivoPoints] = useState(0); // Puntos acumulados para auditivo
+  const [kinestesicoPoints, setKinestesicoPoints] = useState(0); 
+  
   const navigate = useNavigate();
+  const respuestaValores = {
+    "Sí": 3,
+    "No": 2,
+    "A veces": 1
+  };
 
 
   // Cargar las preguntas desde la API
@@ -49,7 +58,109 @@ const KahootForm = () => {
   const handleOptionClick = (option) => {
     setSelectedOption(option);
     setIsAnswered(true); // Marca la pregunta como respondida
-  };
+
+    // Aquí se obtiene el estilo asociado a la pregunta (visual, auditivo, kinestésico)
+    const currentQuestion = questions[currentQuestionIndex];
+    const questionStyle = currentQuestion.estilo; // Suponiendo que cada pregunta tiene un campo 'estilo'
+
+    const respuestaValor = respuestaValores[option];
+
+    // Acumular los puntos según el estilo de la pregunta
+    if (questionStyle === 'visual') {
+      setVisualPoints(prev => prev + respuestaValor);
+    } else if (questionStyle === 'auditivo') {
+      setAuditivoPoints(prev => prev + respuestaValor);
+    } else if (questionStyle === 'kinestesico') {
+      setKinestesicoPoints(prev => prev + respuestaValor);
+    }
+
+    // Enviar la respuesta y los puntos acumulados a la API
+    sendAnswerToAPI(currentQuestion.pregunta_id, option, questionStyle, respuestaValor);
+};
+
+
+const sendAnswerToAPI = async (pregunta_id, respuesta, estilo, respuestaValor) => {
+  const userId = localStorage.getItem('userId'); // Recupera el ID del usuario desde el localStorage
+
+  try {
+    const response = await fetch('https://miformadeaprender-all.onrender.com/auth/guardarRespuesta', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id_user: userId,
+        pregunta_id,
+        respuesta,
+        estilo,
+        respuestaValor,
+        visualPoints,
+        auditivoPoints,
+        kinestesicoPoints,
+      }),
+    });
+
+    if (!response.ok) {
+      console.error('Error al guardar la respuesta:', await response.json());
+    }
+  } catch (error) {
+    console.error('Error al guardar la respuesta:', error);
+  }
+};
+
+  
+  
+
+const handleFinalSubmit = async () => {
+  if (isNaN(visualPoints) || isNaN(auditivoPoints) || isNaN(kinestesicoPoints)) {
+    console.error('Los puntos deben ser números válidos');
+    return;
+  }
+
+  const userId = localStorage.getItem('userId'); // Recupera el ID del usuario desde el localStorage
+  console.log('Visual:', visualPoints, 'Auditivo:', auditivoPoints, 'Kinestésico:', kinestesicoPoints);
+
+  try {
+    const response = await fetch('https://miformadeaprender-all.onrender.com/auth/puntos', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id_user: userId,
+        visual: visualPoints,
+        auditivo: auditivoPoints,
+        kinestesico: kinestesicoPoints,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('Error al actualizar los puntos:', errorData);
+      return;
+    }
+
+    console.log('Puntos actualizados correctamente');
+    navigate('/resultado');
+  } catch (error) {
+    console.error('Error al actualizar los puntos:', error);
+  }
+};
+
+  
+
+  
+  
+
+  //Acceder al id
+  useEffect(() => {
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      console.error('No se encontró el ID del usuario.');
+      navigate('/'); // Redirige al inicio si no hay ID
+    }
+    console.log('Usuario actual con ID:', userId);
+  }, []);
 
   // Manejar el avance a la siguiente pregunta
   const goToNextQuestion = () => {
@@ -59,8 +170,8 @@ const KahootForm = () => {
         setIsAnswered(false); // Reinicia el estado de respuesta
         setSelectedOption(null); // Resetea la opción seleccionada
       } else {
-        // Si es la última pregunta, redirige a la página de resultados
-        navigate('/resultado'); // Asegúrate de que la ruta '/resultado' exista en tu router
+        // Si es la última pregunta, llama al submit final
+        handleFinalSubmit(); // Enviar los puntos a la API
       }
     }
   };
@@ -73,6 +184,10 @@ const KahootForm = () => {
       </div>
     );
   }
+
+  
+  
+  
 
   const currentQuestion = questions[currentQuestionIndex];
 
