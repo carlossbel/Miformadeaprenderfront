@@ -459,3 +459,124 @@
 .star-88 { top: 80%; left: 20%; }
 .star-99 { top: 80%; left: 80%; }
 .star-100 { top: 10%; left: 90%; }
+
+
+
+/*Modal de resultados*/
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal button {
+  align-self: flex-end;
+  margin-top: 10px;
+}
+
+
+.students-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.students-table th, .students-table td {
+  padding: 10px;
+  border: 1px solid #ccc;
+  text-align: left;
+}
+
+.modal-content-detalles {
+  background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 900px; /* Ancho máximo de la modal */
+    max-height: 80vh; /* Altura máxima de la modal */
+    overflow-y: auto; /* Habilita el scrollbar vertical */
+  }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+table, th, td {
+  border: 1px solid #ddd;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  background-color: #f4f4f4;
+}
+
+button {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #6c63ff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #6c63ff;
+}
+
+.details-button1 {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #6c63ff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: center;
+  text-align: center;
+  margin-left: 680px;
+}
+
+.details-button2 {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #6c63ff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: center;
+  text-align: center;
+  margin-left: 620px;
+}
+
+
+.navbar-stats1 { 
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centra el texto en el medio */
+  background-color: #6a0dad;
+  padding: 15px 20px; /* Espacio interno para dar respiro a los elementos */
+  color: white;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1000; /* Asegura que esté siempre encima del contenido */
+  font-size: 18px; /* Aumentado de 16px a 18px */
+  text-align: center; /* Asegura que el texto esté alineado al centro */
+}

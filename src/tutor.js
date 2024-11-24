@@ -30,6 +30,13 @@ const Tutor = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [professorsWithGroups, setProfessorsWithGroups] = useState([]);
   
+  const [newProfesor, setNewProfesor] = useState({
+    username: '',
+    password: '',
+    email: '',
+  });
+
+  const [message, setMessage] = useState(null);
 
   const [isProfessorSection, setIsProfessorSection] = useState(true);
   const [professors, setProfessors] = useState([]); // Lista de profesores
@@ -40,6 +47,9 @@ const Tutor = () => {
     professorId: '', // ID del profesor seleccionado
     groupId: '', // ID del grupo seleccionado
   });
+
+  const userId = localStorage.getItem('userId');
+console.log('ID del usuario:', userId);
 
   
   
@@ -72,6 +82,56 @@ const Tutor = () => {
     ProfessorsWithGroups();
   }, []);
   
+
+  // Función para obtener profesores
+const fetchProfessors = async () => {
+  try {
+    const response = await fetch('https://miformadeaprender-all.onrender.com/auth/getProfesores');
+    if (response.ok) {
+      const data = await response.json();
+      setProfessors(data.professors); // Actualizamos el estado con los profesores
+    } else {
+      console.error('Error al obtener los profesores:', response.status);
+      setProfessors([]); // Limpia el estado si ocurre un error
+    }
+  } catch (error) {
+    console.error('Error de conexión al servidor:', error);
+    setProfessors([]); // Limpia el estado en caso de error
+  }
+};
+
+const fetchGroups = async () => {
+  try {
+    const response = await fetch('https://miformadeaprender-all.onrender.com/auth/buscar');
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data); // Verifica cómo se ven los datos
+      if (Array.isArray(data.grupos)) {
+        setGroups(data.grupos); // Actualiza el estado con los grupos
+      } else {
+        console.error('La API no devolvió un arreglo válido.');
+        setGroups([]); // Maneja el error adecuadamente
+      }
+    } else {
+      console.error('Error al obtener los grupos. Código:', response.status);
+      setGroups([]);
+    }
+  } catch (error) {
+    console.error('Error de conexión al servidor:', error);
+    setGroups([]);
+  }
+};
+
+// Llama a fetchGroups cuando se monta el componente
+useEffect(() => {
+  fetchGroups();
+}, []);
+
+// Llama a fetchProfessors cuando se monta el componente
+useEffect(() => {
+  fetchProfessors();
+}, []);
+
   
   const handleBack = () => {
     navigate('/');
@@ -97,9 +157,20 @@ const Tutor = () => {
   });
 
   
-  
-  
-  
+
+  //Añadir profesor:
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewProfesor({ ...newProfesor, [name]: value });
+  };
+
+  const handleLogout = () => {
+    // Eliminar el ID del usuario del localStorage
+    localStorage.removeItem('userId');
+
+    // Redirigir al usuario a la página de inicio de sesión
+    navigate('/login');
+  };
 
   const handleRegisterGrupo = async () => {
     if (!newStudent.groupId || !newStudent.professorId) {
@@ -140,7 +211,7 @@ const Tutor = () => {
   const handleRegisterProfessor = async () => {
     if (!newProfessor.username || !newProfessor.password || !newProfessor.email) {
       setErrorMessage('Por favor completa todos los campos.');
-      setSuccessMessage(''); // Limpiar mensaje de éxito
+      setSuccessMessage('');
       return;
     }
   
@@ -150,25 +221,32 @@ const Tutor = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(newProfessor),
+        body: JSON.stringify({
+          username: newProfessor.username,
+          password: newProfessor.password,
+          email: newProfessor.email,
+        }),
       });
   
       const data = await response.json();
   
       if (response.ok) {
-        setSuccessMessage('Profesor registrado exitosamente.'); // Mensaje de éxito
-        setErrorMessage(''); // Limpiar cualquier mensaje de error previo
-        setNewProfessor({ username: '', password: '', email: '' }); // Limpiar el formulario
+        setSuccessMessage('Profesor registrado exitosamente.');
+        setErrorMessage('');
+        setNewProfessor({ username: '', password: '', email: '' }); // Limpiar formulario
       } else {
         setErrorMessage(data.message || 'Error al registrar el profesor.');
-        setSuccessMessage(''); // Limpiar mensaje de éxito
+        setSuccessMessage('');
       }
     } catch (error) {
-      console.error('Error al enviar los datos:', error);
+      console.error('Error al conectar con la API:', error);
       setErrorMessage('Ocurrió un error al registrar el profesor.');
-      setSuccessMessage(''); // Limpiar mensaje de éxito
+      setSuccessMessage('');
     }
   };
+  
+  
+  
   
   
   
@@ -340,7 +418,7 @@ const Tutor = () => {
       <div className="navbar">
         <img src={logo} alt="Logo" className="navbar-logo" />
         <input type="text" placeholder="Buscar..." className="navbar-search" />
-        <button className="navbar-filter" onClick={handleBack}>
+        <button className="navbar-filter"  onClick={handleLogout}>
           <FontAwesomeIcon icon={faHome} /> Inicio
         
         </button>
@@ -367,70 +445,77 @@ const Tutor = () => {
               {isProfessorSection ? (
                 <>
                   <input
-                    placeholder="Nombre del profesor"
-                    type="text"
-                    className="modal-input"
-                    value={newProfessor.username}
-                    onChange={(e) => setNewProfessor({ ...newProfessor, username: e.target.value })}
-                  />
+          type="text"
+          placeholder="Nombre del profesor"
+          className="modal-input"
+          value={newProfessor.username}
+          onChange={(e) =>
+            setNewProfessor({ ...newProfessor, username: e.target.value })
+          }
+        />
                   <input
-                    placeholder="Contraseña del profesor"
-                    type="password"
-                    className="modal-input"
-                    value={newProfessor.password}
-                    onChange={(e) => setNewProfessor({ ...newProfessor, password: e.target.value })}
-                  />
-                  <input
-                    placeholder="Correo del profesor"
-                    type="email"
-                    className="modal-input"
-                    value={newProfessor.email}
-                    onChange={(e) => setNewProfessor({ ...newProfessor, email: e.target.value })}
-                  />
+          type="password"
+          placeholder="Contraseña del profesor"
+          className="modal-input"
+          value={newProfessor.password}
+          onChange={(e) =>
+            setNewProfessor({ ...newProfessor, password: e.target.value })
+          }
+        />
+        <input
+          type="email"
+          placeholder="Correo del profesor"
+          className="modal-input"
+          value={newProfessor.email}
+          onChange={(e) =>
+            setNewProfessor({ ...newProfessor, email: e.target.value })
+          }
+        />
                 </>
               ) : (
                 <>
                   <div>
-                    <label htmlFor="professorId">Profesor:</label>
-                    <select
-                      className="modal-input"
-                      id="professorId"
-                      value={newStudent.professorId}
-                      onChange={(e) => setNewStudent({ ...newStudent, professorId: e.target.value })}
-                    >
-                      <option value="">Selecciona un profesor</option>
-                      {professors.length > 0 ? (
-                        professors.map((professor) => (
-                          <option key={professor.id} value={professor.id}>
-                            {professor.username}
-                          </option>
-                        ))
-                      ) : (
-                        <option value="">No hay profesores disponibles</option>
-                      )}
-                    </select>
-                  </div>
+  <label htmlFor="professorId">Profesor:</label>
+  <select
+    className="modal-input"
+    id="professorId"
+    value={newStudent.professorId}
+    onChange={(e) => setNewStudent({ ...newStudent, professorId: e.target.value })}
+  >
+    <option value="">Selecciona un profesor</option>
+    {professors.length > 0 ? (
+      professors.map((professor) => (
+        <option key={professor.id} value={professor.id}>
+          {professor.username}
+        </option>
+      ))
+    ) : (
+      <option value="">No hay profesores disponibles</option>
+    )}
+  </select>
+</div>
+
   
-                  <div>
-                    <label htmlFor="groupId">Grupo:</label>
-                    <select
-                      className="modal-input"
-                      id="groupId"
-                      value={newStudent.groupId}
-                      onChange={(e) => setNewStudent({ ...newStudent, groupId: e.target.value })}
-                    >
-                      <option value="">Selecciona un grupo</option>
-                      {groups.length > 0 ? (
-                        groups.map((group, index) => (
-                          <option key={index} value={group.id}>
-                            {group.grupo}
-                          </option>
-                        ))
-                      ) : (
-                        <option value="">No hay grupos disponibles</option>
-                      )}
-                    </select>
-                  </div>
+<div>
+        <label htmlFor="groupId">Grupo:</label>
+        <select
+          className="modal-input"
+          id="groupId"
+          value={newStudent.groupId}
+          onChange={(e) => setNewStudent({ ...newStudent, groupId: e.target.value })}
+        >
+          <option value="">Selecciona un grupo</option>
+          {groups.length > 0 ? (
+            groups.map((group, index) => (
+              <option key={index} value={group.grupo}>
+                {group.grupo}
+              </option>
+            ))
+          ) : (
+            <option value="">No hay grupos disponibles</option>
+          )}
+        </select>
+      </div>
                 </>
               )}
   
