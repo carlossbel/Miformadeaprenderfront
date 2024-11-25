@@ -100,6 +100,7 @@ useEffect(() => {
             email: usuario.email,
             grupo: usuario.grupo,
             id: usuario.id,
+            estilo_dominante: usuario.estilo_dominante,
           })));
         } else {
           console.error(`No se encontraron usuarios en el grupo ${group}`);
@@ -278,6 +279,7 @@ useEffect(() => {
               <div className="student-name"><strong>Nombre:</strong> {student.username}</div>
               <div className="student-email"><strong>Correo:</strong> {student.email}</div>
               <div className="student-grupo"><strong>Grupo:</strong> {student.grupo}</div>
+              <div className="student-estilo"><strong>Estilo:</strong> {student.estilo_dominante}</div>
               <button className="details-button" onClick={() => handleDetailsClick(student)}>
                 Detalles
               </button>

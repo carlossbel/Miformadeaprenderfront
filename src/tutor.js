@@ -102,7 +102,7 @@ const fetchProfessors = async () => {
 
 const fetchGroups = async () => {
   try {
-    const response = await fetch('https://miformadeaprender-all.onrender.com/auth/buscar');
+    const response = await fetch('https://miformadeaprender-all.onrender.com/auth/buscar2');
     if (response.ok) {
       const data = await response.json();
       console.log(data); // Verifica cómo se ven los datos
@@ -540,7 +540,7 @@ useEffect(() => {
             <button className="modal-close" onClick={closeProfessorModal}>Cerrar</button>
             <div style={{ marginTop: '10px', textAlign: 'center' }}>
               <button onClick={toggleSection} style={{ padding: '5px 10px', backgroundColor: '#007BFF', color: 'white', border: 'none', borderRadius: '5px' }}>
-                {isProfessorSection ? 'Cambiar a Estudiante' : 'Cambiar a Profesor'}
+                {isProfessorSection ? 'Cambiar a Asignar' : 'Cambiar a Añadir'}
               </button>
             </div>
           </div>
