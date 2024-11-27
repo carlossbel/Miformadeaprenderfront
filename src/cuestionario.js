@@ -13,11 +13,12 @@ const KahootForm = () => {
   const [visualPoints, setVisualPoints] = useState(0); // Puntos acumulados para visual
   const [auditivoPoints, setAuditivoPoints] = useState(0); // Puntos acumulados para auditivo
   const [kinestesicoPoints, setKinestesicoPoints] = useState(0); 
+  const [shouldNavigate, setShouldNavigate] = useState(false);
   
   const navigate = useNavigate();
   const respuestaValores = {
-    "Sí": 3,
-    "No": 2,
+    "Sí": 2,
+    "No": 0,
     "A veces": 1
   };
 
@@ -141,11 +142,18 @@ const handleFinalSubmit = async () => {
     }
 
     console.log('Puntos actualizados correctamente');
-    navigate('/resultado');
+    setShouldNavigate(true); 
   } catch (error) {
     console.error('Error al actualizar los puntos:', error);
   }
 };
+
+useEffect(() => {
+  if (shouldNavigate) {
+    navigate('/resultado'); // Redirige solo cuando `shouldNavigate` sea true
+  }
+}, [shouldNavigate, navigate]);
+
 
   
 
@@ -195,10 +203,22 @@ const handleFinalSubmit = async () => {
   if (!currentQuestion) {
     return <div>¡Gracias por responder todas las preguntas!</div>; // Si no hay más preguntas, muestra el mensaje final
   }
+
+  const progressPercentage = ((currentQuestionIndex + 1) / questions.length) * 100;
+
+  if (questions.length === 0) {
+    return <div>Cargando preguntas...</div>;
+  }
   
 
   return (
     <div className="kahoot-container">
+      <div className="progress-bar">
+        <div
+          className="progress-fill"
+          style={{ width: `${progressPercentage}%` }}
+        ></div>
+      </div>
       <div className="kahoot-box">
         <div className="question-container">
           <div className="kahoot-question">

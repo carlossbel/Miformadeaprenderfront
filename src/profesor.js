@@ -158,7 +158,7 @@ useEffect(() => {
       localStorage.removeItem('userId');
   
       // Redirigir al usuario a la página de inicio de sesión
-      navigate('/login');
+      navigate('/');
     };
   
   

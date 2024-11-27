@@ -79,24 +79,27 @@ const Resultado = () => {
     : null;
 
     let x;
-if (pMin && pMin.estilo) { // Asegúrate de que pMin no sea null
-    switch (pMin.estilo) {
-        case 'Kinestésico':
-            x = 'https://www.ejemploKinestesico.com';
-            break;
-        case 'Auditivo':
-            x = 'https://www.ejemploAuditivo.com';
-            break;
-        case 'Visual':
-            x = 'https://www.ejemploVisual.com';
-            break;
-        default:
-            x = 'https://www.nohaylink.com';
-            break;
-    }
-} else {
-    x = 'https://www.nohaylink.com'; // URL predeterminada si no hay datos
-}
+    useEffect(() => {
+        if (pMin && pMin.estilo) {
+            switch (pMin.estilo) {
+                case 'Kinestésico':
+                    navigate('/kinestesico');
+                    break;
+                case 'Auditivo':
+                    navigate('/auditivo');
+                    break;
+                case 'Visual':
+                    navigate('/visual');
+                    break;
+                default:
+                    navigate('/resultado');
+                    break;
+            }
+        } else {
+            navigate('/resultado');
+        }
+    }, [pMin, navigate]); // Ejecuta el efecto solo cuando pMin cambie
+    
 
 
     return (

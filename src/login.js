@@ -60,7 +60,6 @@ const Login = () => {
     }
   };
 
-  
 console.log(SERVER);  
 
   return (

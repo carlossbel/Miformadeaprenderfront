@@ -8,6 +8,9 @@ import Registro from './registro';
 import Tutor from './tutor';
 import Profesor from './profesor';
 import Resultado from './resultado';
+import Visual from './visual';
+import Auditivo from './auditivo';
+import Kinestésico from './kinestesico';
 
 
 function AppRouter() {
@@ -22,6 +25,9 @@ function AppRouter() {
         <Route path="/tutor" element={<Tutor/>} />
         <Route path="/profesor" element={<Profesor/>} />
         <Route path="/resultado" element={<Resultado/>} />
+        <Route path="/visual" element={<Visual/>} />
+        <Route path="/auditivo" element={<Auditivo/>} />
+        <Route path="/kinestesico" element={<Kinestésico/>} />
       </Routes>
     </Router>
   );
