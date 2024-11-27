@@ -78,27 +78,31 @@ const Resultado = () => {
       )
     : null;
 
-    let x;
-    useEffect(() => {
-        if (pMin && pMin.estilo) {
-            switch (pMin.estilo) {
-                case 'Kinestésico':
-                    navigate('/kinestesico');
-                    break;
-                case 'Auditivo':
-                    navigate('/auditivo');
-                    break;
-                case 'Visual':
-                    navigate('/visual');
-                    break;
-                default:
-                    navigate('/resultado');
-                    break;
-            }
-        } else {
-            navigate('/resultado');
+    let redirectPath = '';
+    // Determinar el camino de redirección dependiendo del estilo con menor porcentaje
+    if (pMin && pMin.estilo) {
+        switch (pMin.estilo) {
+            case 'Kinestésico':
+                redirectPath = '/kinestesico'; // Redirigir a la ruta kinestésico
+                break;
+            case 'Auditivo':
+                redirectPath = '/auditivo'; // Redirigir a la ruta auditivo
+                break;
+            case 'Visual':
+                redirectPath = '/visual'; // Redirigir a la ruta visual
+                break;
+            default:
+                redirectPath = '/resultado'; // Redirigir a resultados si no se encuentra un estilo
+                break;
         }
-    }, [pMin, navigate]); // Ejecuta el efecto solo cuando pMin cambie
+    }
+
+    // Función para manejar la redirección cuando el usuario haga clic en el enlace
+    const handleVisitExample = () => {
+        if (redirectPath) {
+            navigate(redirectPath); 
+        }
+    };
     
 
 
@@ -119,16 +123,36 @@ const Resultado = () => {
                         <p className="porcentaje">{Math.round(progress[index])}%</p>
                     </div>
                 ))}
-                <p>
+                 <p>
                     Para mejorar tu rendimiento en el área de <b>{pMin && (
-    <p>
-        Para mejorar tu rendimiento en el área de <b>{pMin.estilo}</b>, te recomendamos revisar la siguiente información.
-        <br />
-        <a className='vinculo' href={x} target="_blank" rel="noopener noreferrer">Visitar Ejemplo</a>
-    </p>
-)}</b>
+                        <span>
+                            <b>{pMin.estilo}</b>, te recomendamos revisar la siguiente información.
+                            <br />
+                            <br></br>
+                        
+                            <button className="cta" onClick={handleVisitExample}>
+                                <span className="hover-underline-animation">Visitar Ejemplo</span>
+                                <svg
+                                    id="arrow-horizontal"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="30"
+                                    height="10"
+                                    viewBox="0 0 46 16"
+                                >
+                                    <path
+                                        id="Path_10"
+                                        data-name="Path 10"
+                                        d="M8,0,6.545,1.455l5.506,5.506H-30V9.039H12.052L6.545,14.545,8,16l8-8Z"
+                                        transform="translate(30)"
+                                    ></path>
+                                </svg>
+                            </button>
+                        </span>
+                    )}</b>
                 </p>
             </div>
+            <br></br>
+            
             <button className="cta" onClick={handleBackClick}>
                 <span>Regresar al Inicio</span>
                 <svg width="15px" height="10px" viewBox="0 0 13 10">

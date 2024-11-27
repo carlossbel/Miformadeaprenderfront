@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 
-
 const KahootForm = () => {
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); // Comienza en la primera pregunta
@@ -12,16 +11,15 @@ const KahootForm = () => {
   const [isAnswered, setIsAnswered] = useState(false);
   const [visualPoints, setVisualPoints] = useState(0); // Puntos acumulados para visual
   const [auditivoPoints, setAuditivoPoints] = useState(0); // Puntos acumulados para auditivo
-  const [kinestesicoPoints, setKinestesicoPoints] = useState(0); 
+  const [kinestesicoPoints, setKinestesicoPoints] = useState(0);
   const [shouldNavigate, setShouldNavigate] = useState(false);
-  
+
   const navigate = useNavigate();
   const respuestaValores = {
     "Sí": 2,
     "No": 0,
     "A veces": 1
   };
-
 
   // Cargar las preguntas desde la API
   useEffect(() => {
@@ -33,15 +31,15 @@ const KahootForm = () => {
             'Content-Type': 'application/json',  // Aseguramos que el contenido sea JSON
           }
         });
-  
+
         // Verificar si la respuesta fue exitosa
         if (!response.ok) {
           throw new Error('Error en la solicitud: ' + response.status);
         }
-  
+
         const data = await response.json();
         console.log('Datos recibidos:', data); // Verifica los datos que recibes de la API
-  
+
         if (data && data.length > 0) {
           setQuestions(data); // Guardar las preguntas en el estado
         } else {
@@ -51,10 +49,9 @@ const KahootForm = () => {
         console.error('Error al obtener preguntas:', error);
       }
     };
-  
+
     fetchQuestions();
   }, []);
-  
 
   const handleOptionClick = (option) => {
     setSelectedOption(option);
@@ -77,88 +74,78 @@ const KahootForm = () => {
 
     // Enviar la respuesta y los puntos acumulados a la API
     sendAnswerToAPI(currentQuestion.pregunta_id, option, questionStyle, respuestaValor);
-};
+  };
 
+  const sendAnswerToAPI = async (pregunta_id, respuesta, estilo, respuestaValor) => {
+    const userId = localStorage.getItem('userId'); // Recupera el ID del usuario desde el localStorage
 
-const sendAnswerToAPI = async (pregunta_id, respuesta, estilo, respuestaValor) => {
-  const userId = localStorage.getItem('userId'); // Recupera el ID del usuario desde el localStorage
+    try {
+      const response = await fetch('https://miformadeaprender-all.onrender.com/auth/guardarRespuesta', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id_user: userId,
+          pregunta_id,
+          respuesta,
+          estilo,
+          respuestaValor,
+          visualPoints,
+          auditivoPoints,
+          kinestesicoPoints,
+        }),
+      });
 
-  try {
-    const response = await fetch('https://miformadeaprender-all.onrender.com/auth/guardarRespuesta', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        id_user: userId,
-        pregunta_id,
-        respuesta,
-        estilo,
-        respuestaValor,
-        visualPoints,
-        auditivoPoints,
-        kinestesicoPoints,
-      }),
-    });
-
-    if (!response.ok) {
-      console.error('Error al guardar la respuesta:', await response.json());
+      if (!response.ok) {
+        console.error('Error al guardar la respuesta:', await response.json());
+      }
+    } catch (error) {
+      console.error('Error al guardar la respuesta:', error);
     }
-  } catch (error) {
-    console.error('Error al guardar la respuesta:', error);
-  }
-};
+  };
 
-  
-  
-
-const handleFinalSubmit = async () => {
-  if (isNaN(visualPoints) || isNaN(auditivoPoints) || isNaN(kinestesicoPoints)) {
-    console.error('Los puntos deben ser números válidos');
-    return;
-  }
-
-  const userId = localStorage.getItem('userId'); // Recupera el ID del usuario desde el localStorage
-  console.log('Visual:', visualPoints, 'Auditivo:', auditivoPoints, 'Kinestésico:', kinestesicoPoints);
-
-  try {
-    const response = await fetch('https://miformadeaprender-all.onrender.com/auth/puntos', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        id_user: userId,
-        visual: visualPoints,
-        auditivo: auditivoPoints,
-        kinestesico: kinestesicoPoints,
-      }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error('Error al actualizar los puntos:', errorData);
+  const handleFinalSubmit = async () => {
+    if (isNaN(visualPoints) || isNaN(auditivoPoints) || isNaN(kinestesicoPoints)) {
+      console.error('Los puntos deben ser números válidos');
       return;
     }
 
-    console.log('Puntos actualizados correctamente');
-    setShouldNavigate(true); 
-  } catch (error) {
-    console.error('Error al actualizar los puntos:', error);
-  }
-};
+    const userId = localStorage.getItem('userId'); // Recupera el ID del usuario desde el localStorage
+    console.log('Visual:', visualPoints, 'Auditivo:', auditivoPoints, 'Kinestésico:', kinestesicoPoints);
 
-useEffect(() => {
-  if (shouldNavigate) {
-    navigate('/resultado'); // Redirige solo cuando `shouldNavigate` sea true
-  }
-}, [shouldNavigate, navigate]);
+    try {
+      const response = await fetch('https://miformadeaprender-all.onrender.com/auth/puntos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id_user: userId,
+          visual: visualPoints,
+          auditivo: auditivoPoints,
+          kinestesico: kinestesicoPoints,
+        }),
+      });
 
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Error al actualizar los puntos:', errorData);
+        return;
+      }
 
-  
+      console.log('Puntos actualizados correctamente');
+      setShouldNavigate(true);
+    } catch (error) {
+      console.error('Error al actualizar los puntos:', error);
+    }
+  };
 
-  
-  
+  useEffect(() => {
+    if (shouldNavigate) {
+      navigate('/resultado'); // Redirige solo cuando `shouldNavigate` sea true
+    }
+  }, [shouldNavigate, navigate]);
 
   //Acceder al id
   useEffect(() => {
@@ -172,14 +159,13 @@ useEffect(() => {
 
   // Manejar el avance a la siguiente pregunta
   const goToNextQuestion = () => {
-    if (isAnswered) {
+    if (selectedOption) { // Solo avanzar si se ha seleccionado una respuesta
       if (currentQuestionIndex + 1 < questions.length) {
-        setCurrentQuestionIndex(currentQuestionIndex + 1); // Pasa a la siguiente pregunta
-        setIsAnswered(false); // Reinicia el estado de respuesta
-        setSelectedOption(null); // Resetea la opción seleccionada
+        setCurrentQuestionIndex(currentQuestionIndex + 1);
+        setIsAnswered(false);
+        setSelectedOption(null);
       } else {
-        // Si es la última pregunta, llama al submit final
-        handleFinalSubmit(); // Enviar los puntos a la API
+        handleFinalSubmit();
       }
     }
   };
@@ -193,10 +179,6 @@ useEffect(() => {
     );
   }
 
-  
-  
-  
-
   const currentQuestion = questions[currentQuestionIndex];
 
   // Comprobamos si la pregunta actual existe
@@ -205,11 +187,6 @@ useEffect(() => {
   }
 
   const progressPercentage = ((currentQuestionIndex + 1) / questions.length) * 100;
-
-  if (questions.length === 0) {
-    return <div>Cargando preguntas...</div>;
-  }
-  
 
   return (
     <div className="kahoot-container">
@@ -227,44 +204,35 @@ useEffect(() => {
         </div>
 
         <div className="options-container">
-  {currentQuestion.opciones.map((option, index) => (
-    <button
-      key={index}
-      className={`kahoot-option ${selectedOption === option ? 'selected' : ''}`}
-      onClick={() => handleOptionClick(option)}
-    >
-      {option}
-    </button>
-  ))}
-</div>
+          {currentQuestion.opciones.map((option, index) => (
+            <button
+              key={index}
+              className={`kahoot-option ${selectedOption === option ? 'selected' : ''}`}
+              onClick={() => handleOptionClick(option)}
+            >
+              {option}
+            </button>
+          ))}
+        </div>
 
-
-
-        {isAnswered && (
-  <div className="next-button-container">
-  <button className="next-button" onClick={goToNextQuestion}>
-    <div className="svg-wrapper-1">
-      <div className="svg-wrapper">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          width="24"
-          height="24"
-        >
-          <path fill="none" d="M0 0h24v24H0z"></path>
-          <path
-            fill="currentColor"
-            d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"
-          ></path>
-        </svg>
-      </div>
-    </div>
-    <span>Siguiente</span>
-  </button>
-</div>
-
-)}
-
+        {/* Mostrar el botón "Siguiente" siempre, pero deshabilitado si no se selecciona una respuesta */}
+        <div className="next-button-container">
+          <button
+            className="next-button"
+            onClick={goToNextQuestion}
+            disabled={!selectedOption} // El botón solo está habilitado si se seleccionó una opción
+          >
+            <div className="svg-wrapper-1">
+              <div className="svg-wrapper">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                  <path fill="none" d="M0 0h24v24H0z"></path>
+                  <path fill="currentColor" d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"></path>
+                </svg>
+              </div>
+            </div>
+            <span>Siguiente</span>
+          </button>
+        </div>
       </div>
 
       <div className="stars-container">
