@@ -118,3 +118,9 @@
         margin-top: 10px; /* Espacio encima del botón de registro */
     }
     
+
+    .error-message {
+        color: red;
+        margin-top: 10px;
+      }
+      

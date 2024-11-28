@@ -38,6 +38,7 @@
     
         const data = await response.json();
         console.log('Registro exitoso. Respuesta del servidor:', data); // Log de la respuesta exitosa
+        setError('');
         navigate('/login');
       } catch (error) {
         console.error('Error de conexión al servidor:', error); // Log de errores de conexión
@@ -74,6 +75,7 @@
           />
 
           <button className="register-btn" onClick={handleRegistro}>Regístrate</button>
+          {error && <div className="error-message">{error}</div>}
 
           <div className="stars-container">
             <FontAwesomeIcon icon={faStar} className="star-icon star-11" />
