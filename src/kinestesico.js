@@ -12,7 +12,7 @@ const Kinestésico = () => {
       </p>
 
       <div className="resources-section">
-        {/* Sección de Videos */}
+        {}
         <div className="resource">
           <h2 className="resource-title">Videos Recomendados</h2>
           <div className="videos-container">
@@ -35,7 +35,7 @@ const Kinestésico = () => {
           </div>
         </div>
 
-        {/* Sección de Documentos */}
+        {}
         <div className="resource">
           <h2 className="resource-title">Documentos Útiles</h2>
           <ul className="documents-list">
@@ -60,7 +60,7 @@ const Kinestésico = () => {
           </ul>
         </div>
 
-        {/* Sección de Audios */}
+        {}
         <div className="resource">
           <h2 className="resource-title">Audios Educativos</h2>
           <div className="audio-container">

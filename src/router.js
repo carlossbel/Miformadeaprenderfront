@@ -15,7 +15,7 @@ import Kinestésico from './kinestesico';
 
 function AppRouter() {
   return (
-    <Router>
+    <Router basename="/miformadeaprender">
       <Routes>
         <Route path="/" element={<App />} /> 
         <Route path="/login" element={<Login/>} /> 

@@ -1,60 +1,63 @@
-/* Reiniciar estilos básicos */
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Arial, sans-serif; /* Añadido para una fuente más legible */
+  font-family: Arial, sans-serif; 
 }
 
-/* Navbar */
+
 .navbar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   background-color: #6a0dad;
-  padding: 15px 20px; /* Espacio interno para dar respiro a los elementos */
+  padding: 15px 20px;
   color: white;
   width: 100%;
-  position: fixed; /* Fija la navbar en la parte superior */
+  position: fixed;
   top: 0;
   left: 0;
-  z-index: 1000; /* Asegura que esté siempre encima del contenido */
-  font-size: 18px; /* Aumentado de 16px a 18px */
+  z-index: 1000;
+  font-size: 18px;
 }
 
 .navbar-logo {
   height: 60px;
-  margin-right: -600px;
+  margin-right: 20px; 
 }
 
 .navbar-search {
-  flex: 0.5;
+  flex: 1;
   padding: 15px;
   border-radius: 5px;
   border: none;
-  margin-right: -600px;
-  font-size: 18px; /* Aumentado de 16px a 18px */
+  font-size: 18px;
+  max-width: calc(100% - 320px); 
+  margin-right: 20px; 
 }
 
-.navbar-filter {
+.navbar-filter{
   background-color: #fff;
   color: #6a0dad;
   border: none;
   border-radius: 5px;
   padding: 15px 40px;
   cursor: pointer;
-  margin-right: -600px;
-  font-size: 18px; /* Aumentado de 16px a 18px */
+  font-size: 18px;
+  margin-right: 20px; 
+  margin-top: 0px;
 }
 
 .navbar-generate {
   background-color: #fff;
-  color: #6a0dad; 
+  color: #6a0dad;
   border: none;
   border-radius: 5px;
   padding: 15px 40px;
   cursor: pointer;
-  font-size: 18px; /* Aumentado de 16px a 18px */
+  font-size: 18px;
+  margin-top: 0px;
 }
 
 .navbar-filter:hover,
@@ -62,78 +65,78 @@
   background-color: #eaeaea;
 }
 
-/* Contenedor Principal */
+
 .main-content {
   background-color: #f0f0f5;
-  padding: 60px 20px; /* Incrementado el padding superior para evitar solapamiento con la navbar */
-  margin: 80px 0 20px; /* Mueve el contenido hacia abajo, sin márgenes laterales */
-  width: 100%; /* Ocupar todo el ancho de la pantalla */
+  padding: 60px 20px; 
+  margin: 80px 0 20px; 
+  width: 100%; 
   border-radius: 10px;
-  font-size: 18px; /* Aumentado de 16px a 18px */
+  font-size: 18px; 
 }
 
-/* Título del Grupo */
+
 .group-title {
   text-align: center;
-  font-size: 28px; /* Aumentado de 24px a 28px */
+  font-size: 28px; 
   margin-bottom: 20px;
   font-weight: bold;
 }
 
-/* Lista de Alumnos */
-/* Estilo general para el contenedor de la lista de estudiantes */
+
+
 .students-list {
   display: flex;
-  flex-direction: column; /* Esto coloca los elementos de manera vertical */
-  gap: 20px; /* Espacio entre cada profesor */
+  flex-direction: column; 
+  gap: 20px; 
   padding: 20px;
 }
 
-/* Estilo general para cada profesor */
+
 .professor-group {
   margin-bottom: 20px;
-  padding: 25px; /* Aumentar el padding para dar más espacio dentro de la caja */
+  padding: 25px; 
   border: 1px solid #ccc;
   border-radius: 10px;
   background-color: #f9f9f9;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 80%; /* Ajustamos el ancho de la caja al 80% de su contenedor, puedes cambiar este valor */
-  max-width: 900px; /* Máximo ancho para no hacerlo demasiado grande en pantallas grandes */
-  margin-left: auto; /* Centrar la caja horizontalmente */
-  margin-right: auto; /* Centrar la caja horizontalmente */
+  width: 80%; 
+  max-width: 900px; 
+  margin-left: auto; 
+  margin-right: auto; 
 }
 
 
-/* Estilo para el nombre del profesor */
+
 .professor-name {
-  font-size: 28px; /* Tamaño de fuente más grande */
+  font-size: 28px; 
   font-weight: bold;
   color: #333;
   margin: 0;
 }
 
-/* Contenedor de los grupos asignados */
+
 .groups-container {
   display: flex;
-  flex-direction: column; /* Los elementos dentro de este contenedor estarán en forma de columna */
+  flex-direction: column; 
   gap: 10px;
 }
 
-/* Estilo para el título de "Grupos asignados" */
+
 .groups-container p {
   font-size: 18px;
   color: #555;
   margin: 0;
 }
 
-/* Estilo para los recuadros de los grupos */
+
 .group-boxes {
   display: flex;
-  flex-direction: column; /* Los recuadros de grupos estarán en una sola columna */
+  flex-direction: column; 
   gap: 10px;
 }
 
-/* Estilo para cada recuadro de grupo */
+
 .group-box {
   background-color: #4CAF50;
   color: white;
@@ -146,90 +149,90 @@
   transition: background-color 0.3s ease;
 }
 
-/* Hover effect para los recuadros de los grupos */
+
 .group-box:hover {
   background-color: #45a049;
 }
 
-/* Estilo cuando no se encuentran profesores */
-/* General styling for the list container */
+
+
 .students-list {
   display: flex;
-  flex-direction: column; /* Arrange the items vertically */
-  gap: 20px; /* Space between each professor's item */
+  flex-direction: column; 
+  gap: 20px; 
   padding: 20px;
-  max-height: 80vh; /* Limit height of the list */
-  overflow-y: auto; /* Add scroll for overflowing items */
+  max-height: 80vh; 
+  overflow-y: auto; 
 }
 
-/* Styling for each professor item */
+
 .professor-group {
   margin-bottom: 20px;
-  padding: 25px; /* Aumentar el padding para dar más espacio dentro de la caja */
+  padding: 25px; 
   border: 1px solid #ccc;
   border-radius: 10px;
   background-color: #f9f9f9;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 80%; /* Ajustamos el ancho de la caja al 80% de su contenedor, puedes cambiar este valor */
-  max-width: 900px; /* Máximo ancho para no hacerlo demasiado grande en pantallas grandes */
-  margin-left: auto; /* Centrar la caja horizontalmente */
-  margin-right: auto; /* Centrar la caja horizontalmente */
+  width: 80%; 
+  max-width: 900px; 
+  margin-left: auto; 
+  margin-right: auto; 
 }
 
 
-/* Hover effect for the professor box */
+
 .professor-group:hover {
-  transform: scale(1.05); /* Slightly scale up on hover */
+  transform: scale(1.05); 
 }
 
-/* Professor name styling */
+
 .professor-name {
-  font-size: 30px; /* Larger font size for the professor's name */
+  font-size: 30px; 
   font-weight: bold;
   color: #333;
   margin: 0;
 }
 
-/* Styling for the groups container */
+
 .groups-container {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
-/* Styling for the 'Groups Assigned' label */
+
 .groups-container p {
   font-size: 18px;
   color: #666;
   margin: 0;
 }
 
-/* Styling for the group boxes */
+
 .group-boxes {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-/* Styling for each individual group box */
+
 .group-box {
   background-color: #4CAF50;
   color: white;
   padding: 15px 20px;
   border-radius: 10px;
-  font-size: 18px; /* Increase font size for group names */
+  font-size: 18px; 
   font-weight: bold;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
-/* Hover effect for the group boxes */
+
 .group-box:hover {
   background-color: #45a049;
 }
 
-/* Styling when no professors are found */
+
 .students-list p {
   font-size: 22px;
   color: #777;
@@ -241,53 +244,53 @@
   background-color: #5a009e;
 }
 
-/* Estilos para el botón de detalles */
+
 .details-button {
-  margin-left: auto; /* Alínea el botón a la derecha */
-  padding: 12px 20px; /* Incrementado el padding para mayor tamaño */
-  background-color: #6a0dad; /* Color de fondo del botón */
-  color: white; /* Color de texto del botón */
-  border: none; /* Sin borde */
-  border-radius: 5px; /* Esquinas redondeadas */
-  cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
-  font-size: 18px; /* Aumentado de 16px a 18px */
+  margin-left: auto; 
+  padding: 12px 20px; 
+  background-color: #6a0dad; 
+  color: white; 
+  border: none; 
+  border-radius: 5px; 
+  cursor: pointer; 
+  font-size: 18px; 
 }
 
 .details-button:hover {
-  background-color: #5a009e; /* Cambia el color al pasar el cursor */
+  background-color: #5a009e; 
 }
 
-/* Estilo para el menú desplegable */
+
 .dropdown-menu {
-  position: absolute; /* Asegura que el menú se posicione sobre otros elementos */
-  background-color: white; /* Color de fondo */
-  border: 1px solid #ddd; /* Borde */
-  border-radius: 5px; /* Esquinas redondeadas */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para efecto de profundidad */
-  z-index: 10; /* Asegura que esté encima de otros elementos */
-  margin-top: 256px; /* Espacio entre el botón y el menú */
-  right: 230px; /* Alinear el menú a la derecha del botón */
-  font-size: 18px; /* Tamaño de fuente */
+  position: absolute; 
+  background-color: white; 
+  border: 1px solid #ddd; 
+  border-radius: 5px; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  z-index: 10; 
+  margin-top: 256px; 
+  right: 230px; 
+  font-size: 18px; 
   
-  /* Propiedades adicionales */
-  max-height: 200px; /* Altura máxima del menú */
-  overflow-y: auto;/* Permite desplazamiento vertical cuando el contenido excede la altura */
+  
+  max-height: 200px; 
+  overflow-y: auto;
 }
 
 
-/* Estilo para los elementos del menú desplegable */
+
 .dropdown-menu div {
-  padding: 15px; /* Incrementado el padding para mayor espacio */
-  cursor: pointer; /* Cambia el cursor al pasar por encima */
-  color: #6a0dad; /* Color morado para las letras */
-  font-size: 18px; /* Aumentado de 16px a 18px */
+  padding: 15px; 
+  cursor: pointer; 
+  color: #6a0dad; 
+  font-size: 18px; 
 }
 
 .dropdown-menu div:hover {
-  background-color: #f0f0f5; /* Color al pasar el mouse sobre un grupo */
+  background-color: #f0f0f5; 
 }
 
-/* Modal */
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -307,25 +310,25 @@
   border-radius: 20px;
   width: 500px;
   text-align: center;
-  font-size: 20px; /* Aumentado de 18px a 20px */
+  font-size: 20px; 
 }
 
 .modal-input {
   width: 100%;
-  padding: 15px; /* Incrementado el padding para mayor tamaño */
+  padding: 15px; 
   margin-bottom: 20px;
   border-radius: 5px;
   border: 1px solid #ddd;
-  font-size: 18px; /* Aumentado de 16px a 18px */
+  font-size: 18px; 
 }
 
 .modal-button, .modal-close {
-  padding: 12px 25px; /* Incrementado el padding para mayor tamaño */
+  padding: 12px 25px; 
   border: none;
   border-radius: 5px;
   cursor: pointer;
   margin: 5px;
-  font-size: 18px; /* Aumentado de 16px a 18px */
+  font-size: 18px; 
 }
 
 .modal-button {
@@ -347,7 +350,7 @@
 
 .error-message {
   color: red;
-  font-size: 16px; /* Aumentado de 14px a 16px */
+  font-size: 16px; 
   margin-bottom: 10px;
 }
 
@@ -357,7 +360,7 @@
   bottom: 20px;
   right: 20px;
   padding: 10px 20px;
-  background-color: #6c63ff; /* Color de fondo */
+  background-color: #6c63ff; 
   color: white;
   border: none;
   border-radius: 5px;
@@ -367,11 +370,11 @@
 }
 
 .fixed-token-button:hover {
-  background-color: #5a54e5; /* Cambio de color al pasar el cursor */
+  background-color: #5a54e5; 
 }
 
 .fixed-token-button:focus {
-  outline: none; /* Eliminar el borde al hacer clic */
+  outline: none; 
 }
 
 
@@ -381,51 +384,51 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro con transparencia */
+  background-color: rgba(0, 0, 0, 0.5); 
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* Asegurarse de que la modal esté por encima de otros elementos */
+  z-index: 1000; 
 }
 
 .modal-content {
   background-color: white;
   border-radius: 8px;
   padding: 20px;
-  width: 400px; /* Ancho de la modal */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* Sombra para profundidad */
-  animation: fadeIn 0.3s; /* Animación de entrada */
+  width: 400px; 
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); 
+  animation: fadeIn 0.3s; 
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(-20px); /* Desplazamiento hacia arriba */
+    transform: translateY(-20px); 
   }
   to {
     opacity: 1;
-    transform: translateY(0); /* Regreso a la posición original */
+    transform: translateY(0); 
   }
 }
 
 .token-details {
-  margin-top: 20px; /* Espacio entre los detalles del token y otros elementos */
+  margin-top: 20px; 
 }
 
 .token-details h3 {
-  margin-bottom: 10px; /* Espacio debajo del título */
+  margin-bottom: 10px; 
 }
 
 .token-details ul {
-  list-style-type: none; /* Quitar viñetas */
-  padding: 0; /* Quitar padding */
+  list-style-type: none; 
+  padding: 0; 
 }
 
 .token-details li {
-  margin-bottom: 10px; /* Espacio entre los elementos de la lista */
+  margin-bottom: 10px; 
   padding: 10px;
-  border: 1px solid #eee; /* Bordes suaves para los elementos de la lista */
-  border-radius: 5px; /* Bordes redondeados */
+  border: 1px solid #eee; 
+  border-radius: 5px; 
 }
 .modal-overlay {
 position: fixed;
@@ -433,66 +436,66 @@ top: 0;
 left: 0;
 right: 0;
 bottom: 0;
-background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro con transparencia */
+background-color: rgba(0, 0, 0, 0.5); 
 display: flex;
 justify-content: center;
 align-items: center;
-z-index: 1000; /* Asegurarse de que la modal esté por encima de otros elementos */
+z-index: 1000; 
 }
 
 .modal-content {
 background-color: white;
 border-radius: 8px;
 padding: 20px;
-width: 400px; /* Ancho de la modal */
-box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* Sombra para profundidad */
-animation: fadeIn 0.3s; /* Animación de entrada */
+width: 400px; 
+box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); 
+animation: fadeIn 0.3s; 
 }
 
 @keyframes fadeIn {
 from {
   opacity: 0;
-  transform: translateY(-20px); /* Desplazamiento hacia arriba */
+  transform: translateY(-20px); 
 }
 to {
   opacity: 1;
-  transform: translateY(0); /* Regreso a la posición original */
+  transform: translateY(0); 
 }
 }
 
 .token-details {
-margin-top: 20px; /* Espacio entre los detalles del token y otros elementos */
+margin-top: 20px; 
 }
 
 .token-details h3 {
-margin-bottom: 10px; /* Espacio debajo del título */
+margin-bottom: 10px; 
 }
 
 .token-details ul {
-list-style-type: none; /* Quitar viñetas */
-padding: 0; /* Quitar padding */
+list-style-type: none; 
+padding: 0; 
 }
 
 .token-details li {
-margin-bottom: 10px; /* Espacio entre los elementos de la lista */
+margin-bottom: 10px; 
 padding: 10px;
-border: 1px solid #eee; /* Bordes suaves para los elementos de la lista */
-border-radius: 5px; /* Bordes redondeados */
+border: 1px solid #eee; 
+border-radius: 5px; 
 }
 
 
-/*Modal Tokens*/
+
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro semi-transparente */
+  background-color: rgba(0, 0, 0, 0.5); 
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* Asegura que la modal esté por encima de otros elementos */
+  z-index: 1000; 
 }
 
 .modal-content {
@@ -500,9 +503,9 @@ border-radius: 5px; /* Bordes redondeados */
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  max-width: 600px; /* Ancho máximo de la modal */
-  max-height: 80vh; /* Altura máxima de la modal */
-  overflow-y: auto; /* Habilita el scrollbar vertical */
+  max-width: 600px; 
+  max-height: 80vh; 
+  overflow-y: auto; 
 }
 
 .modal-input {
@@ -514,7 +517,7 @@ border-radius: 5px; /* Bordes redondeados */
 }
 
 .modal-button {
-  background-color: #4B0082; /* Color de fondo del botón */
+  background-color: #4B0082; 
   color: white;
   padding: 10px;
   border: none;
@@ -524,11 +527,11 @@ border-radius: 5px; /* Bordes redondeados */
 }
 
 .modal-button:hover {
-  background-color: #6A5ACD; /* Color del botón al pasar el cursor */
+  background-color: #6A5ACD; 
 }
 
 .modal-close {
-  background-color: #ccc; /* Color del botón de cerrar */
+  background-color: #ccc; 
   color: black;
   padding: 10px;
   border: none;
@@ -539,7 +542,7 @@ border-radius: 5px; /* Bordes redondeados */
 }
 
 .modal-close:hover {
-  background-color: #bbb; /* Color del botón de cerrar al pasar el cursor */
+  background-color: #bbb; 
 }
 
 .token-details {
@@ -551,34 +554,34 @@ border-radius: 5px; /* Bordes redondeados */
 }
 
 .token-details ul {
-  list-style-type: none; /* Eliminar viñetas */
-  padding: 0; /* Eliminar padding */
+  list-style-type: none; 
+  padding: 0; 
 }
 
 .token-details li {
   margin-bottom: 10px;
-  border: 1px solid #ccc; /* Bordes para separar cada detalle */
+  border: 1px solid #ccc; 
   padding: 10px;
   border-radius: 5px;
 }
 
 .bottom-left-button {
   position: fixed;
-  bottom: 20px; /* Ubicado a 20px del borde inferior */
-  left: 20px; /* Ubicado a 20px del borde izquierdo */
-  background-color: #6c63ff; /* Color de fondo */
-  color: white; /* Color del texto */
-  border: none; /* Sin bordes */
-  border-radius: 5px; /* Bordes redondeados */
-  padding: 10px 20px; /* Espaciado interno */
-  font-size: 16px; /* Tamaño de la fuente */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para resaltar */
-  cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+  bottom: 20px; 
+  left: 20px; 
+  background-color: #6c63ff; 
+  color: white; 
+  border: none; 
+  border-radius: 5px; 
+  padding: 10px 20px; 
+  font-size: 16px; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+  cursor: pointer; 
 }
 
 .bottom-left-button:hover {
-  background-color: #6A5ACD; /* Color al pasar el cursor */
-  transition: background-color 0.1s ease; /* Transición suave */
+  background-color: #6A5ACD; 
+  transition: background-color 0.1s ease; 
 }
 
 .success-message, .error-message {
@@ -601,16 +604,16 @@ border-radius: 5px; /* Bordes redondeados */
 
 
 
-/*Estrellas css*/
 
 
 
 
 
-/*Prueba de css*/
 
-/*Registrar profesor*/
-/* From Uiverse.io by satyamchaudharydev */ 
+
+
+
+ 
 .card {
   width: 240px;
   height: 254px;
@@ -674,22 +677,22 @@ border-radius: 5px; /* Bordes redondeados */
 
 
 
-/* Estilo general para el contenedor de profesores */
+
 .professor-group {
   margin-bottom: 20px;
-  padding: 25px; /* Aumentar el padding para dar más espacio dentro de la caja */
+  padding: 25px; 
   border: 1px solid #ccc;
   border-radius: 10px;
   background-color: #f9f9f9;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 80%; /* Ajustamos el ancho de la caja al 80% de su contenedor, puedes cambiar este valor */
-  max-width: 900px; /* Máximo ancho para no hacerlo demasiado grande en pantallas grandes */
-  margin-left: auto; /* Centrar la caja horizontalmente */
-  margin-right: auto; /* Centrar la caja horizontalmente */
+  width: 80%; 
+  max-width: 900px; 
+  margin-left: auto; 
+  margin-right: auto; 
 }
 
 
-/* Estilo para el nombre del profesor */
+
 .professor-name {
   font-size: 24px;
   font-weight: bold;
@@ -697,26 +700,26 @@ border-radius: 5px; /* Bordes redondeados */
   margin-bottom: 10px;
 }
 
-/* Contenedor de grupos asignados */
+
 .groups-container {
   margin-top: 10px;
 }
 
-/* Estilo para el título de "Grupos asignados" */
+
 .groups-container p {
   font-size: 16px;
   color: #555;
   margin-bottom: 5px;
 }
 
-/* Estilo para los recuadros de los grupos */
+
 .group-boxes {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
 
-/* Estilo individual de cada recuadro de grupo */
+
 .group-box {
   background-color: #6c63ff;
   color: white;
@@ -729,7 +732,7 @@ border-radius: 5px; /* Bordes redondeados */
   transition: background-color 0.3s ease;
 }
 
-/* Hover effect para los recuadros de los grupos */
+
 .group-box:hover {
   background-color: #6c63ff;
 }
@@ -737,74 +740,79 @@ border-radius: 5px; /* Bordes redondeados */
 
 
 
-/* Contenedor principal que ocupa toda la pantalla */
+
 .main-content1 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start; /* Alineación hacia arriba */
+  justify-content: flex-start; 
   width: 1800px;
-  height: 80vh; /* Ocupa el 100% del alto de la pantalla */
+  height: 80vh; 
   overflow-y: auto;
-  overflow-x: auto; /* Activa el scroll vertical si hay mucho contenido */
+  overflow-x: auto; 
   padding: 20px;
   background-color: #f3f3f3;
-  box-sizing: border-box; /* Incluye el padding en el tamaño total */
+  box-sizing: border-box; 
 }
 
-/* Título del grupo */
+
 .group-title1 {
   font-size: 2rem;
   font-weight: bold;
   color: #333;
-  margin-bottom: 20px; /* Espacio entre el título y la lista */
+  margin-bottom: 20px; 
   text-align: center;
   width: 100%;
 }
 
-/* Lista de profesores y sus grupos */
+
 .students-list1 {
   display: flex;
   flex-direction: column;
-  gap: 50px; /* Espacio entre los elementos de la lista */
-  width: 200%;
-  max-width: 800px; /* Limita el ancho máximo en pantallas grandes */
+  gap: 15px;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
 }
 
-/* Tarjeta de cada profesor */
 .professor-group1 {
   background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 6px;
+  width: fit-content;
+  margin: 20px auto; 
   box-sizing: border-box;
 }
 
-/* Estilo del nombre del profesor */
 .professor-name1 {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: bold;
   color: #6c63ff;
   margin-bottom: 10px;
+  text-align: center;
 }
 
-/* Contenedor de grupos asignados */
 .groups-container1 {
   margin-top: 10px;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .groups-container1 p {
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: #555;
   margin-bottom: 10px;
 }
 
-/* Cajas de los grupos */
 .group-boxes1 {
   display: flex;
-  flex-wrap: wrap; /* Ajusta a varias filas si es necesario */
-  gap: 10px; /* Espacio entre las cajas */
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
 }
 
 .group-box1 {
@@ -815,5 +823,12 @@ border-radius: 5px; /* Bordes redondeados */
   border-radius: 5px;
   font-size: 1rem;
   text-align: center;
+  width: auto;
+  max-width: 200px;
+  box-sizing: border-box;
 }
 
+
+.centered {
+  text-align: center;
+}

@@ -295,10 +295,10 @@ useEffect(() => {
 {isStatsModalOpen && groupStats && (
   <div className="modal">
     <div className="modal-content-detalles">
-      {/* Asegúrate de que estás pasando un valor adecuado a JSX, no un objeto */}
+      {}
       <h2>Estadísticas del Grupo: {selectedGroup}</h2>
 
-      {/* Solo pasa números a los datos del gráfico */}
+      {}
       <Pie
         data={{
           labels: ['Visual', 'Auditivo', 'Kinestésico'],
@@ -345,7 +345,7 @@ useEffect(() => {
   </div>
 )}
 
-      {/* Modal de detalles del usuario */}
+      {}
       {isModalOpen && (
         <div className="modal">
           <div className="modal-content-detalles">
@@ -388,8 +388,8 @@ useEffect(() => {
         </div>
       )}
 
-      {/* Modal de respuestas */}
-      {/* Modal de respuestas */}
+      {}
+      {}
 {isResponsesModalOpen && (
   <div className="modal">
     <div className="modal-content-detalles">
@@ -425,7 +425,7 @@ useEffect(() => {
         <p>No se encontraron respuestas.</p>
       )}
       <button onClick={closeResponsesModal}>Cerrar</button>
-      {/* Botón para volver a la modal de resultados */}
+      {}
       <button className="details-button2"  onClick={() => { closeResponsesModal(); setIsModalOpen(true); }}>Volver a Resultados</button>
     </div>
   </div>

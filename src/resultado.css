@@ -1,290 +1,271 @@
-/* Resultado - Contenedor principal */
 .resultado-contenedor {
-    padding: 40px;
-    background-color: #f8f9fa;
-    font-family: Arial, sans-serif;
-    color: #5A48E7;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    max-width: 800px;
-    margin: 0 auto;
-  }
-  
-  .resultado-titulo {
-    font-size: 2.5rem;
-    color: #5A2D82;
-    margin-bottom: 20px;
-  }
-  
-  .resultado-descripcion {
-    font-size: 1.2rem;
-    margin-bottom: 30px;
-    color: #6c757d;
-  }
-  
-  /* Lista de resultados */
-  .resultado-lista {
-    margin-top: 20px;
-  }
-  
-  /* Item individual */
-  .resultado-item {
-    margin-bottom: 30px;
-    padding: 15px;
-    border: 2px solid #b492f0;
-    border-radius: 10px;
-    background-color: #fff;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  }
-  
-  .resultado-item h2 {
-    font-size: 1.5rem;
-    color: #5A48E7;
-  }
-  
-  .barra-contenedor {
-    background-color: #e9ecef;
-    border-radius: 10px;
-    height: 20px;
-    width: 100%;
-    margin-top: 10px;
-    position: relative;
-  }
-  
-  .barra-progreso {
-    background-color: #5A48E7;
-    height: 100%;
-    border-radius: 10px;
-    transition: width 1s ease;
-  }
-  
-  .porcentaje {
-    margin-top: 10px;
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #5A48E7;
-  }
-  
-  /* Enlace de recomendación */
-  .vinculo {
-    color: royalblue;
-    text-decoration: none;
-    font-weight: bold;
-    transition: color 0.3s ease;
-  }
-  
-  .vinculo:hover {
-    color:#5A48E7;
-  }
-  
-  /* Botón de regreso */
-  .boton-regresar {
-    background-color: #5A48E7;
-    color: white;
-    padding: 12px 30px;
-    border: none;
-    border-radius: 16px;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-top: 30px;
-  }
-  
-  .boton-regresar:hover {
-    background-color: #5A48E7;
-  }
-  
-  /* Estilo para el botón "Siguiente" */
-  .next-button-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-  }
-  
-  .next-button {
-    font-family: inherit;
-    font-size: 20px;
-    background: #5A48E7;
-    color: white;
-    padding: 0.7em 1em;
-    padding-left: 0.9em;
-    display: flex;
-    align-items: center;
-    border: none;
-    border-radius: 16px;
-    overflow: hidden;
-    transition: all 0.2s;
-    cursor: pointer;
-  }
-  
-  .next-button span {
-    display: block;
-    margin-left: 0.3em;
-    transition: all 0.3s ease-in-out;
-  }
-  
-  .next-button svg {
-    display: block;
-    transform-origin: center center;
-    transition: transform 0.3s ease-in-out;
-  }
-  
-  .next-button:hover .svg-wrapper {
-    animation: fly-1 0.6s ease-in-out infinite alternate;
-  }
-  
-  .next-button:hover svg {
-    transform: translateX(1.2em) rotate(45deg) scale(1.1);
-  }
-  
-  .next-button:hover span {
-    transform: translateX(5em);
-  }
-  
-  .next-button:active {
-    transform: scale(0.95);
-  }
-  
-  /* Animación para los botones */
-  @keyframes fly-1 {
-    from {
-      transform: translateY(0.1em);
-    }
-  
-    to {
-      transform: translateY(-0.1em);
-    }
-  }
-  
-  /* Estilo de los botones de las opciones */
-  .kahoot-option {
-    color: #5A48E7;
-    text-transform: uppercase;
-    text-decoration: none;
-    border: 2px solid #5A48E7;
-    padding: 10px 20px;
-    font-size: 17px;
-    cursor: pointer;
-    font-weight: bold;
-    background: transparent;
-    position: relative;
-    transition: all 1s;
-    overflow: hidden;
-  }
-  
-  .kahoot-option:hover {
-    color: white;
-  }
-  
-  .kahoot-option::before {
-    content: "";
-    position: absolute;
-    height: 100%;
-    width: 0%;
-    top: 0;
-    left: -40px;
-    transform: skewX(45deg);
-    background-color: #5A48E7;
-    z-index: -1;
-    transition: all 1s;
-  }
-  
-  .kahoot-option:hover::before {
-    width: 160%;
-  }
-  
-  /* Estilos para el enlace de recomendación */
-  .vinculo {
-    color: royalblue;
-    text-decoration: none;
-    font-weight: bold;
-  }
-  
-  .vinculo:hover {
-    color: #5A48E7;
-  }
-  
+  padding: 20px;
+  background-color: #f8f9fa;
+  font-family: Arial, sans-serif;
+  color: #5A48E7;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 90%;
+  margin: 0 auto;
+}
 
+.resultado-titulo {
+  font-size: 2rem;
+  color: #5A2D82;
+  margin-bottom: 15px;
+}
 
-  /* Botón de regreso */
-  .cta {
-    position: relative;
-    margin: auto;
-    padding: 12px 18px;
-    transition: all 0.2s ease;
-    border: none;
-    background: none;
-    cursor: pointer;
+.resultado-descripcion {
+  font-size: 1rem;
+  margin-bottom: 20px;
+  color: #6c757d;
+}
+
+.resultado-lista {
+  margin-top: 15px;
+}
+
+.resultado-item {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 2px solid #b492f0;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.resultado-item h2 {
+  font-size: 1.3rem;
+  color: #5A48E7;
+}
+
+.barra-contenedor {
+  background-color: #e9ecef;
+  border-radius: 10px;
+  height: 15px;
+  width: 100%;
+  margin-top: 10px;
+  position: relative;
+}
+
+.barra-progreso {
+  background-color: #5A48E7;
+  height: 100%;
+  border-radius: 10px;
+  transition: width 1s ease;
+}
+
+.porcentaje {
+  margin-top: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #5A48E7;
+}
+
+.vinculo {
+  color: royalblue;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.vinculo:hover {
+  color: #5A48E7;
+}
+
+.boton-regresar {
+  background-color: #5A48E7;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 16px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+}
+
+.boton-regresar:hover {
+  background-color: #5A48E7;
+}
+
+.next-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.next-button {
+  font-family: inherit;
+  font-size: 18px;
+  background: #5A48E7;
+  color: white;
+  padding: 0.7em 1em;
+  padding-left: 0.9em;
+  display: flex;
+  align-items: center;
+  border: none;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.next-button span {
+  display: block;
+  margin-left: 0.3em;
+  transition: all 0.3s ease-in-out;
+}
+
+.next-button svg {
+  display: block;
+  transform-origin: center center;
+  transition: transform 0.3s ease-in-out;
+}
+
+.next-button:hover .svg-wrapper {
+  animation: fly-1 0.6s ease-in-out infinite alternate;
+}
+
+.next-button:hover svg {
+  transform: translateX(1.2em) rotate(45deg) scale(1.1);
+}
+
+.next-button:hover span {
+  transform: translateX(5em);
+}
+
+.next-button:active {
+  transform: scale(0.95);
+}
+
+@keyframes fly-1 {
+  from {
+    transform: translateY(0.1em);
+  }
+
+  to {
+    transform: translateY(-0.1em);
+  }
+}
+
+.kahoot-option {
+  color: #5A48E7;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 2px solid #5A48E7;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: bold;
+  background: transparent;
+  position: relative;
+  transition: all 1s;
+  overflow: hidden;
+}
+
+.kahoot-option:hover {
+  color: white;
+}
+
+.kahoot-option::before {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 0%;
+  top: 0;
+  left: -40px;
+  transform: skewX(45deg);
+  background-color: #5A48E7;
+  z-index: -1;
+  transition: all 1s;
+}
+
+.kahoot-option:hover::before {
+  width: 160%;
+}
+
+.vinculo {
+  color: royalblue;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.vinculo:hover {
+  color: #5A48E7;
+}
+
+.cta {
+  position: relative;
+  margin: auto;
+  padding: 12px 18px;
+  transition: all 0.2s ease;
+  border: none;
+  background: none;
+  cursor: pointer;
 }
 
 .cta:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: block;
-    border-radius: 50px;
-    background: #5A48E7; /* Color morado */
-    width: 45px;
-    height: 45px;
-    transition: all 0.3s ease;
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  border-radius: 50px;
+  background: #5A48E7;
+  width: 45px;
+  height: 45px;
+  transition: all 0.3s ease;
 }
 
 .cta span {
-    position: relative;
-    font-family: "Ubuntu", sans-serif;
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    color: #ffffff; /* Color blanco para el texto */
-    margin-right: 10px; /* Margen derecho para separar del icono */
-    text-shadow: 0 0 3px #5A48E7, 0 0 5px #5A48E7; /* Contorno morado en el texto */
+  position: relative;
+  font-family: "Ubuntu", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  margin-right: 10px;
+  text-shadow: 0 0 3px #5A48E7, 0 0 5px #5A48E7;
 }
 
 .cta svg {
-    position: relative;
-    top: 0;
-    margin-left: 10px;
-    fill: none;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke: #ffffff; /* Contorno morado en la flecha */
-    stroke-width: 2;
-    transform: translateX(-5px);
-    transition: all 0.3s ease;
-    
+  position: relative;
+  top: 0;
+  margin-left: 10px;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke: #ffffff;
+  stroke-width: 2;
+  transform: translateX(-5px);
+  transition: all 0.3s ease;
 }
 
 .cta:hover:before {
-    width: 100%;
-    background: #5A48E7; /* Color morado */
+  width: 100%;
+  background: #5A48E7;
 }
 
 .cta:hover svg {
-    transform: translateX(0);
+  transform: translateX(0);
 }
 
 .cta:active {
-    transform: scale(0.95);
+  transform: scale(0.95);
 }
 
-/* Animación de hover */
 .cta:before {
-    transition: width 0.3s ease, background 0.3s ease;
+  transition: width 0.3s ease, background 0.3s ease;
 }
 
-
-/*Estrellas*/
 .star-6 { top: 15%; left: 5%; }
 .star-7 { top: 1%; left: 50%; }
 .star-8 { top: 80%; left: 20%; }
 .star-9 { top: 70%; left: 80%; }
 .star-10 { top: 10%; left: 90%; }
-  
 
-/*Botones*/
-/* From Uiverse.io by alexmaracinaru */ 
 .cta {
   border: none;
   background: none;

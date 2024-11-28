@@ -199,7 +199,7 @@ const KahootForm = () => {
       <div className="kahoot-box">
         <div className="question-container">
           <div className="kahoot-question">
-            {currentQuestion.contenido} {/* Muestra la pregunta */}
+            {currentQuestion.contenido} {}
           </div>
         </div>
 
@@ -215,7 +215,7 @@ const KahootForm = () => {
           ))}
         </div>
 
-        {/* Mostrar el botón "Siguiente" siempre, pero deshabilitado si no se selecciona una respuesta */}
+        {}
         <div className="next-button-container">
           <button
             className="next-button"

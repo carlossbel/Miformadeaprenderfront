@@ -127,7 +127,7 @@ const [grupo, setGrupo] = useState(''); // Estado para almacenar el grupo tempor
           />
           <button className="login-btn" onClick={handleCuestionario}>Ingresar</button>
         </div>
-        {error && <p className="error-text">{error}</p>} {/* Muestra mensaje de error si existe */}
+        {error && <p className="error-text">{error}</p>} {}
         <p className="login-text">
           Eres tutor/profesor <span className="login-link" onClick={handleLoginClick}>inicia sesión</span>
         </p>
@@ -136,11 +136,10 @@ const [grupo, setGrupo] = useState(''); // Estado para almacenar el grupo tempor
         <FontAwesomeIcon icon={faStar} className="star-icon star-1" />
         <FontAwesomeIcon icon={faStar} className="star-icon star-2" />
         <FontAwesomeIcon icon={faStar} className="star-icon star-3" />
-        <FontAwesomeIcon icon={faStar} className="star-icon star-4" />
         <FontAwesomeIcon icon={faStar} className="star-icon star-5" />
       </div>
 
-      {/* Modal de Éxito */}
+      {}
       {isModalOpen && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -169,7 +168,7 @@ const [grupo, setGrupo] = useState(''); // Estado para almacenar el grupo tempor
         </div>
       )}
 
-      {/* Modal de Error */}
+      {}
       {isErrorModalOpen && (
         <div className="modal-overlay">
           <div className="modal-content">

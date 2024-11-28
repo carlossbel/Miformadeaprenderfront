@@ -437,9 +437,9 @@ useEffect(() => {
       {isProfessorModalOpen && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <span className="card__title">{isProfessorSection ? 'Agregar Profesor' : 'Agregar Estudiante'}</span>
+            <span className="card__title">{isProfessorSection ? 'Agregar Profesor' : 'Asignar profesor'}</span>
             <p className="card__content">
-              {isProfessorSection ? 'Completa el formulario para agregar un nuevo profesor.' : 'Completa el formulario para agregar un nuevo estudiante.'}
+              {isProfessorSection ? 'Completa el formulario para agregar un nuevo profesor.' : 'Completa el formulario para asignar un nuevo profesor.'}
             </p>
             <div className="card__form">
               {isProfessorSection ? (
@@ -602,6 +602,7 @@ useEffect(() => {
   <div className="main-content1">
   <h2 className="group-title1">{selectedGroup}</h2>
   <div className="students-list1">
+  <p class="centered"><strong>Profesores:</strong></p>
     {professorsWithGroups.length > 0 ? (
       professorsWithGroups.map((professor) => (
         <div key={professor.profesor_id} className="professor-group1">
