@@ -188,7 +188,6 @@ function App() {
       
       <div className="content-box">
         <img src={logo} alt="Logo" className="logo" />
-        <h1>Mi Forma de Aprender</h1>
         <h2>Descubre tu estilo de aprendizaje</h2>
         
         <div className="input-box">

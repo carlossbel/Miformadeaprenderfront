@@ -8,14 +8,18 @@ const Resultado = () => {
     const navigate = useNavigate();
     const [resultados, setResultados] = useState([]);
     const [progress, setProgress] = useState([0, 0, 0]);
-
     const [userId, setUserId] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    // URL de la API con respaldo
+    const API_URL = process.env.REACT_APP_API_URL || 'https://backend-miformadeaprender.onrender.com';
 
     // Obtener el userId de localStorage
     useEffect(() => {
         const storedUserId = localStorage.getItem('userId');
         if (!storedUserId) {
-            console.error('No se encontró el ID del usuario.');
+            setError('No se encontró ID de usuario.');
             navigate('/'); // Redirige al inicio si no hay ID
         } else {
             setUserId(storedUserId);
@@ -28,88 +32,160 @@ const Resultado = () => {
         if (userId) {
             const fetchResultados = async () => {
                 try {
-                    const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/getpuntos/${userId}`);
+                    setLoading(true);
+                    const response = await fetch(`${API_URL}/auth/getpuntos/${userId}`);
+                    
+                    if (!response.ok) {
+                        throw new Error(`Error en la solicitud: ${response.status}`);
+                    }
                     
                     const data = await response.json();
+                    console.log('Datos recibidos:', data);
 
-                    if (response.status !== 200) {
-                        console.error(data.error);
-                    } else {
-                        setResultados([
-                            { estilo: "Visual", porcentaje: parseFloat(data.visual) },
-                            { estilo: "Auditivo", porcentaje: parseFloat(data.auditivo) },
-                            { estilo: "Kinestésico", porcentaje: parseFloat(data.kinestesico) },
-                        ]);
-                    }
+                    setResultados([
+                        { estilo: "Visual", porcentaje: parseFloat(data.visual) || 0 },
+                        { estilo: "Auditivo", porcentaje: parseFloat(data.auditivo) || 0 },
+                        { estilo: "Kinestésico", porcentaje: parseFloat(data.kinestesico) || 0 },
+                    ]);
+                    
+                    setLoading(false);
                 } catch (error) {
                     console.error('Error al obtener los resultados:', error);
+                    setError('Error al cargar los resultados. Por favor, intenta nuevamente.');
+                    setLoading(false);
                 }
             };
 
             fetchResultados();
         }
-    }, [userId]);
+    }, [userId, API_URL]);
 
+    // Animación de las barras de progreso
     useEffect(() => {
-        const intervalIds = resultados.map((resultado, index) => {
-            return setInterval(() => {
-                setProgress((prevProgress) => {
-                    const newProgress = [...prevProgress];
-                    if (newProgress[index] < resultado.porcentaje) {
-                        newProgress[index] += 1;
-                    } else {
-                        clearInterval(intervalIds[index]);
-                    }
-                    return newProgress;
-                });
-            }, 1);
-        });
+        if (resultados.length > 0 && !loading) {
+            const intervalIds = resultados.map((resultado, index) => {
+                return setInterval(() => {
+                    setProgress((prevProgress) => {
+                        const newProgress = [...prevProgress];
+                        if (newProgress[index] < resultado.porcentaje) {
+                            newProgress[index] = Math.min(newProgress[index] + 1, resultado.porcentaje);
+                        } else {
+                            clearInterval(intervalIds[index]);
+                        }
+                        return newProgress;
+                    });
+                }, 20); // Velocidad de animación ajustada
+            });
 
-        return () => intervalIds.forEach((id) => clearInterval(id));
-    }, [resultados]);
+            return () => intervalIds.forEach((id) => clearInterval(id));
+        }
+    }, [resultados, loading]);
 
+    // Navegar al inicio
     const handleBackClick = () => {
         navigate('/'); 
     };
 
+    // Determinar el estilo con el porcentaje más bajo para las recomendaciones
     const pMin = resultados.length > 0 
-    ? resultados.reduce((min, item) =>
-        item.porcentaje < min.porcentaje ? item : min
-      )
-    : null;
+        ? resultados.reduce((min, item) =>
+            item.porcentaje < min.porcentaje ? item : min, resultados[0])
+        : null;
 
+    // Determinar la ruta de redirección según el estilo con menor porcentaje
     let redirectPath = '';
-    // Determinar el camino de redirección dependiendo del estilo con menor porcentaje
     if (pMin && pMin.estilo) {
-        switch (pMin.estilo) {
-            case 'Kinestésico':
-                redirectPath = '/kinestesico'; // Redirigir a la ruta kinestésico
+        switch (pMin.estilo.toLowerCase()) {
+            case 'kinestésico':
+            case 'kinestesico':
+                redirectPath = '/kinestesico';
                 break;
-            case 'Auditivo':
-                redirectPath = '/auditivo'; // Redirigir a la ruta auditivo
+            case 'auditivo':
+                redirectPath = '/auditivo';
                 break;
-            case 'Visual':
-                redirectPath = '/visual'; // Redirigir a la ruta visual
+            case 'visual':
+                redirectPath = '/visual';
                 break;
             default:
-                redirectPath = '/resultado'; // Redirigir a resultados si no se encuentra un estilo
+                redirectPath = '/resultado';
                 break;
         }
     }
 
-    // Función para manejar la redirección cuando el usuario haga clic en el enlace
+    // Función para redireccionar a la página de recomendaciones
     const handleVisitExample = () => {
         if (redirectPath) {
             navigate(redirectPath); 
         }
     };
     
+    // Si está cargando, mostrar indicador
+    if (loading) {
+        return (
+            <div className="resultado-contenedor">
+                <div className="loading">
+                    <svg width="50" height="50" viewBox="0 0 50 50">
+                        <circle cx="25" cy="25" r="20" fill="none" strokeWidth="5" stroke="#f3f3f3" />
+                        <circle cx="25" cy="25" r="20" fill="none" strokeWidth="5" stroke="#2684ff" strokeDasharray="125" strokeDashoffset="125" strokeLinecap="round">
+                            <animate attributeName="stroke-dashoffset" values="125;0" dur="1.5s" repeatCount="indefinite" />
+                        </circle>
+                    </svg>
+                    <p>Cargando resultados...</p>
+                </div>
+                
+                <div className="stars-container">
+                    {[...Array(50)].map((_, index) => (
+                        <FontAwesomeIcon 
+                            key={index} 
+                            icon={faStar} 
+                            className={`star-icon star-${index + 1}`} 
+                            style={{
+                                fontSize: `${0.5 + Math.random() * 1}rem`,
+                                opacity: 0.1 + Math.random() * 0.6
+                            }}
+                        />
+                    ))}
+                </div>
+            </div>
+        );
+    }
 
+    // Si hay error, mostrar mensaje
+    if (error) {
+        return (
+            <div className="resultado-contenedor">
+                <h1 className="resultado-titulo">Error</h1>
+                <p className="resultado-descripcion">{error}</p>
+                <button className="cta" onClick={handleBackClick}>
+                    <span>Regresar al Inicio</span>
+                    <svg width="15px" height="10px" viewBox="0 0 13 10">
+                        <path d="M1,5 L11,5" stroke="white" strokeWidth="2" />
+                        <polyline points="8 1 12 5 8 9" stroke="white" fill="none" strokeWidth="2" />
+                    </svg>
+                </button>
+                
+                <div className="stars-container">
+                    {[...Array(50)].map((_, index) => (
+                        <FontAwesomeIcon 
+                            key={index} 
+                            icon={faStar} 
+                            className={`star-icon star-${index + 1}`}
+                            style={{
+                                fontSize: `${0.5 + Math.random() * 1}rem`,
+                                opacity: 0.1 + Math.random() * 0.6
+                            }}
+                        />
+                    ))}
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="resultado-contenedor">
             <h1 className="resultado-titulo">Resultados del Cuestionario de Estilos de Aprendizaje</h1>
             <p className="resultado-descripcion">A continuación, se muestra el porcentaje de afinidad con cada estilo de aprendizaje:</p>
+            
             <div className="resultado-lista">
                 {resultados.map((resultado, index) => (
                     <div key={index} className="resultado-item">
@@ -123,50 +199,57 @@ const Resultado = () => {
                         <p className="porcentaje">{Math.round(progress[index])}%</p>
                     </div>
                 ))}
-                 <p>
-                    Para mejorar tu rendimiento en el área de <b>{pMin && (
-                        <span>
-                            <b>{pMin.estilo}</b>, te recomendamos revisar la siguiente información.
-                            <br />
-                            <br></br>
-                        
-                            <button className="cta" onClick={handleVisitExample}>
-                                <span className="hover-underline-animation">Visitar Ejemplo</span>
-                                <svg
-                                    id="arrow-horizontal"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="30"
-                                    height="10"
-                                    viewBox="0 0 46 16"
-                                >
-                                    <path
-                                        id="Path_10"
-                                        data-name="Path 10"
-                                        d="M8,0,6.545,1.455l5.506,5.506H-30V9.039H12.052L6.545,14.545,8,16l8-8Z"
-                                        transform="translate(30)"
-                                    ></path>
-                                </svg>
-                            </button>
-                        </span>
-                    )}</b>
-                </p>
             </div>
-            <br></br>
             
-            <button className="cta" onClick={handleBackClick}>
-                <span>Regresar al Inicio</span>
-                <svg width="15px" height="10px" viewBox="0 0 13 10">
-                    <path d="M1,5 L11,5"></path>
-                    <polyline points="8 1 12 5 8 9"></polyline>
-                </svg>
-            </button>
+            {pMin && (
+                <div className="recomendacion">
+                    <p>
+                        Para mejorar tu rendimiento en el área de <strong>{pMin.estilo}</strong>, te recomendamos revisar la siguiente información y realizar los ejercicios sugeridos. Esto te ayudará a desarrollar estrategias de aprendizaje más efectivas para este estilo.
+                    </p>
+                </div>
+            )}
+            
+            <div className="buttons-container">
+                <button className="cta" onClick={handleVisitExample}>
+                    <span className="hover-underline-animation">Ver Recomendaciones</span>
+                    <svg
+                        id="arrow-horizontal"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="30"
+                        height="10"
+                        viewBox="0 0 46 16"
+                    >
+                        <path
+                            id="Path_10"
+                            data-name="Path 10"
+                            d="M8,0,6.545,1.455l5.506,5.506H-30V9.039H12.052L6.545,14.545,8,16l8-8Z"
+                            transform="translate(30)"
+                            fill="white"
+                        ></path>
+                    </svg>
+                </button>
+            
+                <button className="cta" onClick={handleBackClick}>
+                    <span>Regresar al Inicio</span>
+                    <svg width="15px" height="10px" viewBox="0 0 13 10">
+                        <path d="M1,5 L11,5" stroke="white" strokeWidth="2" />
+                        <polyline points="8 1 12 5 8 9" stroke="white" fill="none" strokeWidth="2" />
+                    </svg>
+                </button>
+            </div>
 
             <div className="stars-container">
-                <FontAwesomeIcon icon={faStar} className="star-icon star-6" />
-                <FontAwesomeIcon icon={faStar} className="star-icon star-7" />
-                <FontAwesomeIcon icon={faStar} className="star-icon star-8" />
-                <FontAwesomeIcon icon={faStar} className="star-icon star-9" />
-                <FontAwesomeIcon icon={faStar} className="star-icon star-10" />
+                {[...Array(50)].map((_, index) => (
+                    <FontAwesomeIcon 
+                        key={index} 
+                        icon={faStar} 
+                        className={`star-icon star-${index + 1}`}
+                        style={{
+                            fontSize: `${0.5 + Math.random() * 1}rem`,
+                            opacity: 0.1 + Math.random() * 0.6
+                        }}
+                    />
+                ))}
             </div>
         </div>
     );
