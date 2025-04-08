@@ -1,0 +1,38 @@
+:root {
+    /* Colores principales */
+    --primary-dark: #08084b;      /* Azul oscuro (casi negro) para fondos principales */
+    --primary-medium: #1a237e;    /* Azul índigo medio */
+    --primary-light: #6483b0;     /* Azul claro para acentos */
+    
+    /* Colores complementarios */
+    --accent-light: #4fc3f7;      /* Azul celeste para elementos interactivos */
+    --accent-purple: #7c4dff;     /* Púrpura para detalles (heredado del diseño original) */
+    
+    /* Colores neutros */
+    --neutral-white: #ffffff;     /* Blanco puro */
+    --neutral-light: #f5f7fa;     /* Gris muy claro para fondos secundarios */
+    --neutral-medium: #d0d6e2;    /* Gris claro para bordes */
+    --neutral-dark: #333b4d;      /* Gris oscuro para texto secundario */
+    
+    /* Colores de estado */
+    --success: #4caf50;           /* Verde para mensajes positivos */
+    --warning: #ff9800;           /* Naranja para advertencias */
+    --error: #f44336;             /* Rojo para errores */
+    --info: #2196f3;              /* Azul para información */
+    
+    /* Gradientes */
+    --gradient-primary: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+    --gradient-accent: linear-gradient(135deg, var(--accent-purple) 0%, var(--primary-light) 100%);
+    
+    /* Sombras */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.15);
+    
+    /* Radios de borde */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+  }

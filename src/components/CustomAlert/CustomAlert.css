@@ -1,0 +1,130 @@
+.custom-alert {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    max-width: 400px;
+    min-width: 300px;
+    padding: 16px 20px;
+    border-radius: 10px;
+    background-color: white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    z-index: 9999;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  
+  .custom-alert.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .custom-alert.hidden {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  
+  .custom-alert-icon {
+    flex-shrink: 0;
+    margin-right: 12px;
+    font-size: 20px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .custom-alert-content {
+    flex-grow: 1;
+    font-size: 0.95rem;
+    color: #333;
+  }
+  
+  .custom-alert-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    color: #666;
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+    padding: 0;
+    margin-left: 10px;
+    line-height: 1;
+  }
+  
+  .custom-alert-close:hover {
+    opacity: 1;
+  }
+  
+  .custom-alert-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background-color: rgba(255, 255, 255, 0.7);
+    transition: width 0.1s linear;
+  }
+  
+  /* Estilos por tipo */
+  .custom-alert-info {
+    background-color: #e3f2fd;
+    border-left: 4px solid #2196f3;
+  }
+  
+  .custom-alert-info .custom-alert-progress {
+    background-color: #2196f3;
+  }
+  
+  .custom-alert-success {
+    background-color: #e8f5e9;
+    border-left: 4px solid #4caf50;
+  }
+  
+  .custom-alert-success .custom-alert-progress {
+    background-color: #4caf50;
+  }
+  
+  .custom-alert-warning {
+    background-color: #fff8e1;
+    border-left: 4px solid #ff9800;
+  }
+  
+  .custom-alert-warning .custom-alert-progress {
+    background-color: #ff9800;
+  }
+  
+  .custom-alert-error {
+    background-color: #fdecea;
+    border-left: 4px solid #f44336;
+  }
+  
+  .custom-alert-error .custom-alert-progress {
+    background-color: #f44336;
+  }
+  
+  /* Animación para múltiples alertas */
+  .custom-alert:nth-child(2) {
+    top: 100px;
+  }
+  
+  .custom-alert:nth-child(3) {
+    top: 180px;
+  }
+  
+  .custom-alert:nth-child(4) {
+    top: 260px;
+  }
+  
+  @media (max-width: 500px) {
+    .custom-alert {
+      left: 20px;
+      right: 20px;
+      max-width: calc(100% - 40px);
+      min-width: auto;
+    }
+  }

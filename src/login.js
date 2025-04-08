@@ -5,7 +5,6 @@ import './Login.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 
-
 const SERVER = process.env.REACT_APP_API_URL;
 
 const Login = () => {
@@ -13,6 +12,7 @@ const Login = () => {
   const [username, setUsername] = useState(''); 
   const [password, setPassword] = useState(''); 
   const [error, setError] = useState(''); 
+  
   const handleBackClick = () => {
     navigate('/'); 
   };
@@ -25,7 +25,7 @@ const Login = () => {
     try {
       console.log('Datos enviados:', { username, password });
 
-      const response = await fetch('https://miformadeaprender-all.onrender.com/auth/login', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -41,17 +41,18 @@ const Login = () => {
 
       // Obtener los datos de la respuesta
       const data = await response.json();
+      console.log('Respuesta completa:', data); // Agregado para depuración
 
       // Guardar el ID del usuario en localStorage
-      localStorage.setItem('userId', data.user.id);  // Guardamos el id en localStorage
+      localStorage.setItem('userId', data.user.id);
 
       // Redirigir según el tipo de usuario
       if (data.user.type === 2) {
         navigate('/profesor'); // Redirige a /profesor si el tipo es 2 (profesor)
-      } else if (data.user.type === 0) {
-        navigate('/tutor'); // Redirige a /tutor si el tipo es 0 (tutor)
+      } else if (data.user.type === 1) { // Cambiado de 0 a 1
+        navigate('/tutor'); // Redirige a /tutor si el tipo es 1 (tutor/admin)
       } else {
-        setError('Tipo de usuario desconocido');
+        setError(`Tipo de usuario desconocido: ${data.user.type}`);
       }
 
     } catch (error) {
@@ -60,10 +61,27 @@ const Login = () => {
     }
   };
 
-console.log(SERVER);  
+  console.log(SERVER);  
 
   return (
-    <div className="login-container"> 
+    <div className="login-container">
+      {/* Fondo de estrellas mejorado */}
+      <div className="stars-container">
+        {Array.from({ length: 25 }).map((_, index) => (
+          <FontAwesomeIcon
+            key={index}
+            icon={faStar}
+            className={`star-icon`}
+            style={{
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              fontSize: `${0.5 + Math.random() * 1.5}rem`,
+              opacity: 0.1 + Math.random() * 0.5
+            }}
+          />
+        ))}
+      </div>
+      
       <img src={logo} alt="Logo" className="logo1" /> 
       <div className="input-box1">
         <input
@@ -84,15 +102,8 @@ console.log(SERVER);
         {error && <p className="error-message">{error}</p>} 
 
         <button className="register-btn" onClick={handleRegistro}>Regístrate</button>
-        <div className="stars-container">
-          <FontAwesomeIcon icon={faStar} className="star-icon star-11" />
-          <FontAwesomeIcon icon={faStar} className="star-icon star-22" />
-          <FontAwesomeIcon icon={faStar} className="star-icon star-33" />
-          <FontAwesomeIcon icon={faStar} className="star-icon star-44" />
-          <FontAwesomeIcon icon={faStar} className="star-icon star-55" />
-        </div>
       </div>
-      <button className="login-btn" onClick={handleBackClick}>Volver al Inicio</button>
+      <button className="login-btn" onClick={handleBackClick} style={{marginTop: '20px', maxWidth: '200px'}}>Volver al Inicio</button>
     </div>
   );
 };

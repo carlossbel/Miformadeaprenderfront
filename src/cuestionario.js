@@ -25,7 +25,7 @@ const KahootForm = () => {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const response = await fetch('https://miformadeaprender-all.onrender.com/auth/preguntas', {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/preguntas`, {
           method: 'GET',  // Especificamos que la solicitud es un GET
           headers: {
             'Content-Type': 'application/json',  // Aseguramos que el contenido sea JSON
@@ -80,7 +80,7 @@ const KahootForm = () => {
     const userId = localStorage.getItem('userId'); // Recupera el ID del usuario desde el localStorage
 
     try {
-      const response = await fetch('https://miformadeaprender-all.onrender.com/auth/guardarRespuesta', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/guardarRespuesta`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -115,7 +115,7 @@ const KahootForm = () => {
     console.log('Visual:', visualPoints, 'Auditivo:', auditivoPoints, 'Kinestésico:', kinestesicoPoints);
 
     try {
-      const response = await fetch('https://miformadeaprender-all.onrender.com/auth/puntos', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/puntos`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

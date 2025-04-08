@@ -57,7 +57,7 @@ console.log('ID del usuario:', userId);
 
   const ProfessorsWithGroups = async () => {
     try {
-      const response = await fetch('https://miformadeaprender-all.onrender.com/auth/profesores-grupo');
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/profesores-grupo`);
       if (response.ok) {
         const data = await response.json();
         console.log(data); // Verifica cómo se ven los datos
@@ -86,7 +86,7 @@ console.log('ID del usuario:', userId);
   // Función para obtener profesores
 const fetchProfessors = async () => {
   try {
-    const response = await fetch('https://miformadeaprender-all.onrender.com/auth/getProfesores');
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/getProfesores`);
     if (response.ok) {
       const data = await response.json();
       setProfessors(data.professors); // Actualizamos el estado con los profesores
@@ -102,7 +102,7 @@ const fetchProfessors = async () => {
 
 const fetchGroups = async () => {
   try {
-    const response = await fetch('https://miformadeaprender-all.onrender.com/auth/buscar2');
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/buscar2`);
     if (response.ok) {
       const data = await response.json();
       console.log(data); // Verifica cómo se ven los datos
@@ -172,38 +172,49 @@ useEffect(() => {
     navigate('/');
   };
 
-  const handleRegisterGrupo = async () => {
-    if (!newStudent.groupId || !newStudent.professorId) {
-      alert('Por favor selecciona un grupo y un profesor.');
-      return;
+  // En tutor.js, función para registrar un grupo
+const handleRegisterGrupo = async () => {
+  if (!newStudent.groupId || !newStudent.professorId) {
+    alert('Por favor selecciona un grupo y un profesor.');
+    return;
+  }
+
+  console.log('Intentando asignar:', {
+    grupo: newStudent.groupId,
+    profesor: newStudent.professorId
+  });
+
+  try {
+    const response = await fetch('https://backend-miformadeaprender.onrender.com/auth/asignar', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        grupo: newStudent.groupId,  // Nombre del grupo
+        profesor: newStudent.professorId, // ID del profesor
+      }),
+    });
+
+    console.log('Respuesta del servidor:', response);
+    const data = await response.json();
+    console.log('Datos de respuesta:', data);
+
+    if (response.ok) {
+      setErrorMessage('');
+      setSuccessMessage('Grupo y profesor registrados exitosamente.');
+      setNewStudent({ ...newStudent, groupId: '', professorId: '' }); // Limpiar campos
+      
+      // Actualizar la lista de profesores con grupos después de la asignación exitosa
+      ProfessorsWithGroups();
+    } else {
+      setErrorMessage(data.message || 'Error al registrar el grupo.');
     }
-  
-    try {
-      const response = await fetch('https://miformadeaprender-all.onrender.com/auth/asignar', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          grupo: newStudent.groupId,  // Nombre del grupo
-          profesor: newStudent.professorId, // ID del profesor
-        }),
-      });
-  
-      const data = await response.json();
-  
-      if (response.ok) {
-        setErrorMessage('');
-        setSuccessMessage('Grupo y profesor registrados exitosamente.');
-        setNewStudent({ ...newStudent, groupId: '', professorId: '' }); // Limpiar campos
-      } else {
-        setErrorMessage(data.message || 'Error al registrar el grupo.');
-      }
-    } catch (error) {
-      console.error('Error al enviar los datos:', error);
-      setErrorMessage('Ocurrió un error al registrar el grupo.');
-    }
-  };
+  } catch (error) {
+    console.error('Error al enviar los datos:', error);
+    setErrorMessage('Ocurrió un error al registrar el grupo.');
+  }
+};
   
 
   
@@ -216,7 +227,7 @@ useEffect(() => {
     }
   
     try {
-      const response = await fetch('https://miformadeaprender-all.onrender.com/auth/registro-profesor', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/registro-profesor`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -259,7 +270,7 @@ useEffect(() => {
 
   const fetchTokenDetails = async () => {
     try {
-      const response = await fetch('https://miformadeaprender-all.onrender.com/auth/token-details', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/token-details`, {
         method: 'GET',
       });
       if (!response.ok) {
@@ -288,7 +299,7 @@ useEffect(() => {
     
     try {
       // Hacemos una consulta a la API para obtener los usuarios de ese grupo
-      const response = await fetch(`https://miformadeaprender-all.onrender.com/auth/alumnos/${group}`);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/alumnos/${group}`);
       if (response.ok) {
         const data = await response.json();
         console.log(data);
@@ -359,7 +370,7 @@ useEffect(() => {
   }
 
   try {
-    const response = await fetch('https://miformadeaprender-all.onrender.com/auth/generate-token', {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/generate-token`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

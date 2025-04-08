@@ -36,6 +36,7 @@ console.log('ID del usuario:', userId);
 const [isStatsModalOpen, setIsStatsModalOpen] = useState(false); // Modal de estadísticas
 
 
+// profesor.js
 useEffect(() => {
   const fetchGrupos = async () => {
     const userId = localStorage.getItem('userId'); // Obtén el ID del usuario del localStorage
@@ -48,16 +49,26 @@ useEffect(() => {
 
     try {
       // Modifica la URL para incluir el ID del profesor
-      const response = await fetch(`https://miformadeaprender-all.onrender.com/auth/buscar/${userId}`);
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Grupos asociados:', data.grupos); // Para depuración
-        setGroups(data.grupos); // Actualiza el estado con los grupos
+      const response = await fetch(`https://backend-miformadeaprender.onrender.com/auth/buscar/${userId}`);
+      
+      if (!response.ok && response.status !== 404) {
+        throw new Error(`Error HTTP: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      console.log('Respuesta de grupos:', data);
+      
+      if (data.grupos && Array.isArray(data.grupos)) {
+        setGroups(data.grupos);
       } else {
-        console.error('Error al obtener los grupos');
+        // Si no hay grupos, establecer un array vacío
+        setGroups([]);
+        console.log('No se encontraron grupos o el formato de respuesta es incorrecto');
       }
     } catch (error) {
-      console.error('Error de conexión al servidor', error);
+      console.error('Error al obtener los grupos:', error);
+      // En caso de error, establecer un array vacío de grupos
+      setGroups([]);
     }
   };
 
@@ -84,7 +95,7 @@ useEffect(() => {
   
     try {
       // Realiza la solicitud pasando tanto el ID del profesor como el grupo
-      const response = await fetch(`https://miformadeaprender-all.onrender.com/auth/buscar/${userId}/${group}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/buscar/${userId}/${group}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -127,7 +138,7 @@ useEffect(() => {
   
     try {
       // Asegúrate de que el valor pasado sea un string y no un objeto
-      const response = await fetch(`https://miformadeaprender-all.onrender.com/auth/grafica/${group}`);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/grafica/${group}`);
       if (response.ok) {
         const data = await response.json();
         console.log('Estadísticas del grupo:', data);
@@ -167,7 +178,7 @@ useEffect(() => {
   const handleRespuestas = async (id_user) => {
     try {
       // Llama a la API para obtener las respuestas del usuario
-      const response = await fetch(`https://miformadeaprender-all.onrender.com/auth/getRespuestas/${id_user}`);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/getRespuestas/${id_user}`);
 
       if (response.ok) {
         const data = await response.json();
@@ -201,7 +212,7 @@ useEffect(() => {
     setIsModalOpen(true);
 
     try {
-      const response = await fetch(`https://miformadeaprender-all.onrender.com/auth/getResultadosTutor/${student.id}`);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/getResultadosTutor/${student.id}`);
       if (response.ok) {
         const data = await response.json();
         console.log('Detalles del estudiante:', data);

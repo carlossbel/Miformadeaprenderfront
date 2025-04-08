@@ -28,7 +28,7 @@ const Resultado = () => {
         if (userId) {
             const fetchResultados = async () => {
                 try {
-                    const response = await fetch(`https://miformadeaprender-all.onrender.com/auth/getpuntos/${userId}`);
+                    const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/getpuntos/${userId}`);
                     
                     const data = await response.json();
 
