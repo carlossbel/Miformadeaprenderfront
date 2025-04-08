@@ -16,6 +16,9 @@ function App() {
   const [alerts, setAlerts] = useState([]);
   const [animateStars, setAnimateStars] = useState(false);
   
+  // URL del backend como variable de respaldo
+  const API_URL = process.env.REACT_APP_API_URL || 'https://backend-miformadeaprender.onrender.com';
+  
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -55,7 +58,7 @@ function App() {
     }
     
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/verify`, {
+      const response = await fetch(`${API_URL}/auth/verify`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -100,7 +103,7 @@ function App() {
     }
   
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/datos`, {
+      const response = await fetch(`${API_URL}/auth/datos`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -133,7 +136,7 @@ function App() {
       
       // Dar un momento para que el usuario vea el mensaje de éxito antes de redirigir
       setTimeout(() => {
-        navigate('./cuestionario');
+        navigate('/cuestionario');
       }, 1500);
     } catch (error) {
       console.error('Error:', error);
