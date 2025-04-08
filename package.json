@@ -22,7 +22,6 @@
     "react-scripts": "5.0.1",
     "web-vitals": "^4.2.4"
   },
-  "homepage": "https://innovasoft.site/miformadeaprender",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
