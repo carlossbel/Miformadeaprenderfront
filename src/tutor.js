@@ -4,6 +4,7 @@ import logo from './Logo_morado.png';
 import './tutor.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faFilter, faSearch, faHome, faUserPlus, faLink } from '@fortawesome/free-solid-svg-icons';
+import alertService from './alertService';
 
 const Tutor = () => {
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ const Tutor = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [professorsWithGroups, setProfessorsWithGroups] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   
   const [newProfesor, setNewProfesor] = useState({
     username: '',
@@ -50,25 +52,46 @@ const Tutor = () => {
   // URL de API con respaldo
   const API_URL = process.env.REACT_APP_API_URL || 'https://backend-miformadeaprender.onrender.com';
   
+  // Verificar si hay un usuario en localStorage
+  useEffect(() => {
+    if (!userId) {
+      alertService.error('No has iniciado sesión. Redirigiendo al inicio...');
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
+    } else {
+      alertService.info('Bienvenido al panel de administración');
+    }
+  }, [userId, navigate]);
+  
   const ProfessorsWithGroups = async () => {
     try {
+      setIsLoading(true);
+      alertService.info('Cargando profesores y grupos...');
+      
       const response = await fetch(`${API_URL}/auth/profesores-grupo`);
       if (response.ok) {
         const data = await response.json();
         console.log('Datos de profesores con grupos:', data);
         if (Array.isArray(data.professors)) {
           setProfessorsWithGroups(data.professors);
+          alertService.success(`${data.professors.length} profesores cargados`);
         } else {
           console.error('La API no devolvió un arreglo válido.');
           setProfessorsWithGroups([]);
+          alertService.warning('No se encontraron profesores');
         }
       } else {
         console.error('Error al obtener profesores y grupos. Código:', response.status);
         setProfessorsWithGroups([]);
+        alertService.error('Error al cargar profesores y grupos');
       }
+      setIsLoading(false);
     } catch (error) {
       console.error('Error de conexión al servidor:', error);
       setProfessorsWithGroups([]);
+      alertService.error('Error de conexión al servidor');
+      setIsLoading(false);
     }
   };
   
@@ -79,44 +102,54 @@ const Tutor = () => {
   // Función para obtener profesores
   const fetchProfessors = async () => {
     try {
+      setIsLoading(true);
       const response = await fetch(`${API_URL}/auth/getProfesores`);
       if (response.ok) {
         const data = await response.json();
         setProfessors(data.professors);
+        alertService.success(`${data.professors.length} profesores encontrados`);
       } else {
         console.error('Error al obtener los profesores:', response.status);
         setProfessors([]);
+        alertService.warning('No se encontraron profesores');
       }
+      setIsLoading(false);
     } catch (error) {
       console.error('Error de conexión al servidor:', error);
       setProfessors([]);
+      alertService.error('Error al cargar los profesores');
+      setIsLoading(false);
     }
   };
 
   const fetchGroups = async () => {
     try {
+      setIsLoading(true);
       const response = await fetch(`${API_URL}/auth/buscar2`);
       if (response.ok) {
         const data = await response.json();
         console.log('Datos de grupos:', data);
         if (Array.isArray(data.grupos)) {
           setGroups(data.grupos);
+          alertService.success(`${data.grupos.length} grupos encontrados`);
         } else {
           console.error('La API no devolvió un arreglo válido.');
           setGroups([]);
+          alertService.warning('No se encontraron grupos');
         }
       } else {
         console.error('Error al obtener los grupos. Código:', response.status);
         setGroups([]);
-        // Mostrar mensaje de error
         setErrorMessage(`Error al obtener grupos: ${response.status}`);
-        setTimeout(() => setErrorMessage(''), 5000);
+        alertService.error(`Error al obtener grupos: ${response.status}`);
       }
+      setIsLoading(false);
     } catch (error) {
       console.error('Error de conexión al servidor:', error);
       setGroups([]);
       setErrorMessage('Error de conexión al servidor');
-      setTimeout(() => setErrorMessage(''), 5000);
+      alertService.error('Error de conexión al servidor');
+      setIsLoading(false);
     }
   };
 
@@ -155,14 +188,18 @@ const Tutor = () => {
   };
 
   const handleLogout = () => {
+    alertService.info('Cerrando sesión...');
     localStorage.removeItem('userId');
-    navigate('/');
+    setTimeout(() => {
+      navigate('/');
+    }, 1000);
   };
 
   // Función para registrar un grupo
   const handleRegisterGrupo = async () => {
     if (!newStudent.groupId || !newStudent.professorId) {
       setErrorMessage('Por favor selecciona un grupo y un profesor.');
+      alertService.warning('Por favor selecciona un grupo y un profesor');
       return;
     }
 
@@ -172,6 +209,9 @@ const Tutor = () => {
     });
 
     try {
+      setIsLoading(true);
+      alertService.info('Asignando profesor al grupo...');
+      
       const response = await fetch(`${API_URL}/auth/asignar`, {
         method: 'POST',
         headers: {
@@ -190,16 +230,21 @@ const Tutor = () => {
       if (response.ok) {
         setErrorMessage('');
         setSuccessMessage('Grupo y profesor registrados exitosamente.');
+        alertService.success('Grupo y profesor asignados exitosamente');
         setNewStudent({ ...newStudent, groupId: '', professorId: '' });
         
         // Actualizar la lista de profesores con grupos después de la asignación exitosa
         ProfessorsWithGroups();
       } else {
         setErrorMessage(data.message || 'Error al registrar el grupo.');
+        alertService.error(data.message || 'Error al asignar profesor');
       }
+      setIsLoading(false);
     } catch (error) {
       console.error('Error al enviar los datos:', error);
       setErrorMessage('Ocurrió un error al registrar el grupo.');
+      alertService.error('Error de conexión al servidor');
+      setIsLoading(false);
     }
   };
 
@@ -207,11 +252,33 @@ const Tutor = () => {
   const handleRegisterProfessor = async () => {
     if (!newProfessor.username || !newProfessor.password || !newProfessor.email) {
       setErrorMessage('Por favor completa todos los campos.');
+      alertService.warning('Por favor completa todos los campos');
+      setSuccessMessage('');
+      return;
+    }
+    
+    // Validar email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(newProfessor.email)) {
+      setErrorMessage('Por favor ingresa un correo electrónico válido.');
+      alertService.warning('Por favor ingresa un correo electrónico válido');
+      setSuccessMessage('');
+      return;
+    }
+    
+    // Validar contraseña
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/;
+    if (!passwordRegex.test(newProfessor.password)) {
+      setErrorMessage('La contraseña debe tener al menos 8 caracteres, incluir una letra mayúscula, un número y un carácter especial.');
+      alertService.warning('La contraseña no cumple con los requisitos mínimos');
       setSuccessMessage('');
       return;
     }
   
     try {
+      setIsLoading(true);
+      alertService.info('Registrando profesor...');
+      
       const response = await fetch(`${API_URL}/auth/registro-profesor`, {
         method: 'POST',
         headers: {
@@ -228,27 +295,35 @@ const Tutor = () => {
   
       if (response.ok) {
         setSuccessMessage('Profesor registrado exitosamente.');
+        alertService.success('Profesor registrado exitosamente');
         setErrorMessage('');
         setNewProfessor({ username: '', password: '', email: '' });
         // Actualizar la lista de profesores
         fetchProfessors();
       } else {
         setErrorMessage(data.message || 'Error al registrar el profesor.');
+        alertService.error(data.message || 'Error al registrar el profesor');
         setSuccessMessage('');
       }
+      setIsLoading(false);
     } catch (error) {
       console.error('Error al conectar con la API:', error);
       setErrorMessage('Ocurrió un error al registrar el profesor.');
+      alertService.error('Error de conexión al servidor');
       setSuccessMessage('');
+      setIsLoading(false);
     }
   };
 
   const handleDetailsClick = (student) => {
-    alert(`Detalles de ${student.name}`);
+    alertService.info(`Mostrando detalles de ${student.name}`);
   };
 
   const fetchTokenDetails = async () => {
     try {
+      setIsLoading(true);
+      alertService.info('Cargando tokens activos...');
+      
       const response = await fetch(`${API_URL}/auth/token-details`, {
         method: 'GET',
         headers: {
@@ -258,6 +333,8 @@ const Tutor = () => {
       
       if (!response.ok) {
         setError(`Error al obtener los detalles del token: ${response.status}`);
+        alertService.error('Error al cargar los tokens');
+        setIsLoading(false);
         return;
       }
 
@@ -287,9 +364,19 @@ const Tutor = () => {
       
       setTokenDetails(processedTokens);
       setActiveTokens(processedTokens);
+      
+      if (processedTokens.length > 0) {
+        alertService.success(`${processedTokens.length} tokens activos encontrados`);
+      } else {
+        alertService.info('No hay tokens activos actualmente');
+      }
+      
+      setIsLoading(false);
     } catch (error) {
       setError('Error al conectar con el servidor');
+      alertService.error('Error de conexión al servidor');
       console.error('Error:', error);
+      setIsLoading(false);
     }
   };
 
@@ -301,23 +388,31 @@ const Tutor = () => {
     setSelectedGroup(group);
     setDropdownOpen(false);
     console.log(`Grupo seleccionado: ${group}`);
+    alertService.info(`Grupo "${group}" seleccionado`);
     
     try {
+      setIsLoading(true);
       const response = await fetch(`${API_URL}/auth/alumnos/${group}`);
       if (response.ok) {
         const data = await response.json();
         console.log(data);
         setStudents(data.usuarios);
+        alertService.success(`${data.usuarios.length} estudiantes encontrados`);
       } else {
         console.error(`No se encontraron usuarios en el grupo ${group}`);
+        alertService.warning(`No se encontraron estudiantes en el grupo "${group}"`);
       }
+      setIsLoading(false);
     } catch (error) {
       console.error('Error de conexión al servidor', error);
+      alertService.error('Error al cargar los estudiantes');
+      setIsLoading(false);
     }
   };
 
   const openModal = () => {
     setIsModalOpen(true);
+    alertService.info('Generando nuevo token de quiz');
   };
 
   const closeModal = () => {
@@ -327,6 +422,7 @@ const Tutor = () => {
 
   const handleSecondaryAction = () => {
     console.log("Nuevo botón presionado");
+    alertService.info('Acción secundaria ejecutada');
   };
 
   const openTokensModal = () => {
@@ -336,10 +432,14 @@ const Tutor = () => {
 
   const toggleProfessorModal = () => {
     setIsProfessorModalOpen(!isProfessorModalOpen);
+    if (!isProfessorModalOpen) {
+      alertService.info(isProfessorSection ? 'Registrando nuevo profesor' : 'Asignando profesor a grupo');
+    }
   };
 
   const toggleSection = () => {
     setIsProfessorSection(!isProfessorSection);
+    alertService.info(isProfessorSection ? 'Cambiando a sección de asignación' : 'Cambiando a sección de registro');
   };
 
   const closeProfessorModal = () => {
@@ -361,10 +461,14 @@ const Tutor = () => {
   const handleGenerateToken = async () => {
     if (newGroup.trim() === '') {
       setError('Por favor ingrese un nombre de grupo');
+      alertService.warning('Por favor ingrese un nombre de grupo');
       return;
     }
 
     try {
+      setIsLoading(true);
+      alertService.info(`Generando token para el grupo "${newGroup}"...`);
+      
       const response = await fetch(`${API_URL}/auth/generate-token`, {
         method: 'POST',
         headers: {
@@ -378,6 +482,7 @@ const Tutor = () => {
       if (response.ok) {
         if (!data.token) {
           setError(data.message);
+          alertService.warning(data.message || 'Ya existe un token para este grupo');
           setToken(data.token);
         } else {
           setToken(data.token);
@@ -386,13 +491,18 @@ const Tutor = () => {
           setNewGroup('');
           closeModal();
           fetchTokenDetails();
+          alertService.success(`Token generado: ${data.token}`);
         }
       } else {
         setError('Error al generar el token');
+        alertService.error('Error al generar el token');
       }
+      setIsLoading(false);
     } catch (error) {
       setError('Error de conexión al servidor');
+      alertService.error('Error de conexión al servidor');
       console.error('Error:', error);
+      setIsLoading(false);
     }
   };
 
@@ -405,24 +515,67 @@ const Tutor = () => {
       return () => clearInterval(timer);
     } else if (timeLeft === 0) {
       setToken('');
+      alertService.warning('El token ha expirado');
     }
   }, [timeLeft]);
+
+  // Pantalla de carga
+  if (isLoading && !professorsWithGroups.length && !groups.length) {
+    return (
+      <div className="loading-container">
+        <div className="loader"></div>
+        <p>Cargando datos...</p>
+        <div className="stars-container">
+          {Array.from({ length: 50 }).map((_, index) => (
+            <FontAwesomeIcon
+              key={index}
+              icon={faStar}
+              className="star-icon"
+              style={{
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+                fontSize: `${0.5 + Math.random() * 1.5}rem`,
+                opacity: 0.1 + Math.random() * 0.5
+              }}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="tutor-container">
       {/* Fondo de estrellas */}
       <div className="stars-container">
-        <FontAwesomeIcon icon={faStar} className="star-icon star-111" />
-        <FontAwesomeIcon icon={faStar} className="star-icon star-222" />
-        <FontAwesomeIcon icon={faStar} className="star-icon star-333" />
-        <FontAwesomeIcon icon={faStar} className="star-icon star-444" />
-        <FontAwesomeIcon icon={faStar} className="star-icon star-555" />
+        {Array.from({ length: 50 }).map((_, index) => (
+          <FontAwesomeIcon
+            key={index}
+            icon={faStar}
+            className="star-icon"
+            style={{
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              fontSize: `${0.5 + Math.random() * 1.5}rem`,
+              opacity: 0.1 + Math.random() * 0.5
+            }}
+          />
+        ))}
       </div>
       
       {/* Barra de navegación */}
       <div className="navbar">
         <img src={logo} alt="Logo" className="navbar-logo" />
-        <input type="text" placeholder="Buscar..." className="navbar-search" />
+        <input 
+          type="text" 
+          placeholder="Buscar..." 
+          className="navbar-search"
+          onChange={(e) => {
+            if (e.target.value.length > 2) {
+              alertService.info(`Buscando "${e.target.value}"...`);
+            }
+          }}
+        />
         <button className="navbar-filter" onClick={handleLogout}>
           <FontAwesomeIcon icon={faHome} /> Inicio
         </button>

@@ -3,16 +3,20 @@ import './KahootForm.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
+import alertService from './alertService';
 
 const KahootForm = () => {
   const [questions, setQuestions] = useState([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); // Comienza en la primera pregunta
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
   const [isAnswered, setIsAnswered] = useState(false);
-  const [visualPoints, setVisualPoints] = useState(0); // Puntos acumulados para visual
-  const [auditivoPoints, setAuditivoPoints] = useState(0); // Puntos acumulados para auditivo
+  const [visualPoints, setVisualPoints] = useState(0);
+  const [auditivoPoints, setAuditivoPoints] = useState(0);
   const [kinestesicoPoints, setKinestesicoPoints] = useState(0);
   const [shouldNavigate, setShouldNavigate] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
   const respuestaValores = {
@@ -21,49 +25,72 @@ const KahootForm = () => {
     "A veces": 1
   };
 
+  // URL de API con respaldo
+  const API_URL = process.env.REACT_APP_API_URL || 'https://backend-miformadeaprender.onrender.com';
+
+  // Verificar si existe un ID de usuario
+  useEffect(() => {
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      alertService.error('No se ha identificado un usuario. Redirigiendo al inicio.');
+      setTimeout(() => navigate('/'), 2000);
+    } else {
+      alertService.info('Cargando cuestionario...');
+    }
+  }, [navigate]);
+
   // Cargar las preguntas desde la API
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/preguntas`, {
-          method: 'GET',  // Especificamos que la solicitud es un GET
+        setIsLoading(true);
+        const response = await fetch(`${API_URL}/auth/preguntas`, {
+          method: 'GET',
           headers: {
-            'Content-Type': 'application/json',  // Aseguramos que el contenido sea JSON
+            'Content-Type': 'application/json',
           }
         });
 
-        // Verificar si la respuesta fue exitosa
         if (!response.ok) {
           throw new Error('Error en la solicitud: ' + response.status);
         }
 
         const data = await response.json();
-        console.log('Datos recibidos:', data); // Verifica los datos que recibes de la API
+        console.log('Datos recibidos:', data);
 
         if (data && data.length > 0) {
-          setQuestions(data); // Guardar las preguntas en el estado
+          setQuestions(data);
+          alertService.success(`${data.length} preguntas cargadas correctamente`);
         } else {
-          console.error('No se encontraron preguntas');
+          setError('No se encontraron preguntas');
+          alertService.warning('No se encontraron preguntas');
         }
+        
+        setIsLoading(false);
       } catch (error) {
         console.error('Error al obtener preguntas:', error);
+        setError('Error al cargar las preguntas. Por favor, intenta nuevamente.');
+        alertService.error('Error al cargar las preguntas');
+        setIsLoading(false);
       }
     };
 
     fetchQuestions();
-  }, []);
+  }, [API_URL]);
 
   const handleOptionClick = (option) => {
+    if (isSubmitting) return;
+    
     setSelectedOption(option);
-    setIsAnswered(true); // Marca la pregunta como respondida
+    setIsAnswered(true);
 
-    // Aquí se obtiene el estilo asociado a la pregunta (visual, auditivo, kinestésico)
+    // Obtener el estilo asociado a la pregunta
     const currentQuestion = questions[currentQuestionIndex];
-    const questionStyle = currentQuestion.estilo; // Suponiendo que cada pregunta tiene un campo 'estilo'
+    const questionStyle = currentQuestion.estilo;
 
     const respuestaValor = respuestaValores[option];
 
-    // Acumular los puntos según el estilo de la pregunta
+    // Acumular los puntos según el estilo
     if (questionStyle === 'visual') {
       setVisualPoints(prev => prev + respuestaValor);
     } else if (questionStyle === 'auditivo') {
@@ -72,15 +99,21 @@ const KahootForm = () => {
       setKinestesicoPoints(prev => prev + respuestaValor);
     }
 
-    // Enviar la respuesta y los puntos acumulados a la API
+    // Enviar la respuesta
     sendAnswerToAPI(currentQuestion.pregunta_id, option, questionStyle, respuestaValor);
   };
 
   const sendAnswerToAPI = async (pregunta_id, respuesta, estilo, respuestaValor) => {
-    const userId = localStorage.getItem('userId'); // Recupera el ID del usuario desde el localStorage
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      alertService.error('ID de usuario no encontrado');
+      return;
+    }
+
+    setIsSubmitting(true);
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/guardarRespuesta`, {
+      const response = await fetch(`${API_URL}/auth/guardarRespuesta`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -98,24 +131,44 @@ const KahootForm = () => {
       });
 
       if (!response.ok) {
-        console.error('Error al guardar la respuesta:', await response.json());
+        const errorData = await response.json();
+        console.error('Error al guardar la respuesta:', errorData);
+        alertService.error('Error al guardar la respuesta');
+      } else {
+        console.log('Respuesta guardada correctamente');
+        // Si estamos en la última pregunta, mostramos un mensaje especial
+        const isLastQuestion = currentQuestionIndex === questions.length - 1;
+        if (isLastQuestion) {
+          alertService.success('¡Última pregunta completada!');
+        } else {
+          alertService.success('Respuesta guardada');
+        }
       }
     } catch (error) {
       console.error('Error al guardar la respuesta:', error);
+      alertService.error('Error al guardar la respuesta');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleFinalSubmit = async () => {
     if (isNaN(visualPoints) || isNaN(auditivoPoints) || isNaN(kinestesicoPoints)) {
-      console.error('Los puntos deben ser números válidos');
+      alertService.error('Los puntos deben ser números válidos');
       return;
     }
 
-    const userId = localStorage.getItem('userId'); // Recupera el ID del usuario desde el localStorage
-    console.log('Visual:', visualPoints, 'Auditivo:', auditivoPoints, 'Kinestésico:', kinestesicoPoints);
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      alertService.error('ID de usuario no encontrado');
+      return;
+    }
+
+    setIsSubmitting(true);
+    alertService.info('Procesando resultados finales...');
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/puntos`, {
+      const response = await fetch(`${API_URL}/auth/puntos`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -131,61 +184,126 @@ const KahootForm = () => {
       if (!response.ok) {
         const errorData = await response.json();
         console.error('Error al actualizar los puntos:', errorData);
+        alertService.error('Error al procesar los resultados');
+        setIsSubmitting(false);
         return;
       }
 
       console.log('Puntos actualizados correctamente');
-      setShouldNavigate(true);
+      alertService.success('¡Cuestionario completado exitosamente!');
+      
+      setTimeout(() => {
+        setShouldNavigate(true);
+      }, 1500);
     } catch (error) {
       console.error('Error al actualizar los puntos:', error);
+      alertService.error('Error al procesar los resultados');
+      setIsSubmitting(false);
     }
   };
 
   useEffect(() => {
     if (shouldNavigate) {
-      navigate('/resultado'); // Redirige solo cuando `shouldNavigate` sea true
+      navigate('/resultado');
     }
   }, [shouldNavigate, navigate]);
 
-  //Acceder al id
-  useEffect(() => {
-    const userId = localStorage.getItem('userId');
-    if (!userId) {
-      console.error('No se encontró el ID del usuario.');
-      navigate('/'); // Redirige al inicio si no hay ID
-    }
-    console.log('Usuario actual con ID:', userId);
-  }, []);
-
   // Manejar el avance a la siguiente pregunta
   const goToNextQuestion = () => {
-    if (selectedOption) { // Solo avanzar si se ha seleccionado una respuesta
+    if (isSubmitting) return;
+    
+    if (selectedOption) {
       if (currentQuestionIndex + 1 < questions.length) {
         setCurrentQuestionIndex(currentQuestionIndex + 1);
         setIsAnswered(false);
         setSelectedOption(null);
+        alertService.info(`Pregunta ${currentQuestionIndex + 2} de ${questions.length}`);
       } else {
         handleFinalSubmit();
       }
+    } else {
+      alertService.warning('Por favor, selecciona una respuesta');
     }
   };
 
-  if (questions.length === 0) {
+  // Si está cargando, mostrar pantalla de carga
+  if (isLoading) {
     return (
       <div className="loader">
-        <span className="loader-text">Cargando..</span>
+        <span className="loader-text">Cargando cuestionario...</span>
         <span className="load"></span>
+        <div className="stars-container">
+          {Array.from({ length: 50 }).map((_, index) => (
+            <FontAwesomeIcon
+              key={index}
+              icon={faStar}
+              className="star-icon"
+              style={{
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+                fontSize: `${0.5 + Math.random() * 1.5}rem`,
+                opacity: 0.1 + Math.random() * 0.5
+              }}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Si hay error, mostrar mensaje
+  if (error) {
+    return (
+      <div className="error-container">
+        <h2>Error</h2>
+        <p>{error}</p>
+        <button onClick={() => navigate('/')}>Volver al inicio</button>
+        <div className="stars-container">
+          {Array.from({ length: 50 }).map((_, index) => (
+            <FontAwesomeIcon
+              key={index}
+              icon={faStar}
+              className="star-icon"
+              style={{
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+                fontSize: `${0.5 + Math.random() * 1.5}rem`,
+                opacity: 0.1 + Math.random() * 0.5
+              }}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Si no hay preguntas, mostrar mensaje
+  if (questions.length === 0) {
+    return (
+      <div className="empty-container">
+        <h2>No hay preguntas disponibles</h2>
+        <p>Por favor, contacta al administrador.</p>
+        <button onClick={() => navigate('/')}>Volver al inicio</button>
+        <div className="stars-container">
+          {Array.from({ length: 50 }).map((_, index) => (
+            <FontAwesomeIcon
+              key={index}
+              icon={faStar}
+              className="star-icon"
+              style={{
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+                fontSize: `${0.5 + Math.random() * 1.5}rem`,
+                opacity: 0.1 + Math.random() * 0.5
+              }}
+            />
+          ))}
+        </div>
       </div>
     );
   }
 
   const currentQuestion = questions[currentQuestionIndex];
-
-  // Comprobamos si la pregunta actual existe
-  if (!currentQuestion) {
-    return <div>¡Gracias por responder todas las preguntas!</div>; // Si no hay más preguntas, muestra el mensaje final
-  }
-
   const progressPercentage = ((currentQuestionIndex + 1) / questions.length) * 100;
 
   return (
@@ -196,10 +314,15 @@ const KahootForm = () => {
           style={{ width: `${progressPercentage}%` }}
         ></div>
       </div>
+      
+      <div className="question-counter">
+        Pregunta {currentQuestionIndex + 1} de {questions.length}
+      </div>
+      
       <div className="kahoot-box">
         <div className="question-container">
           <div className="kahoot-question">
-            {currentQuestion.contenido} {}
+            {currentQuestion.contenido}
           </div>
         </div>
 
@@ -209,18 +332,18 @@ const KahootForm = () => {
               key={index}
               className={`kahoot-option ${selectedOption === option ? 'selected' : ''}`}
               onClick={() => handleOptionClick(option)}
+              disabled={isSubmitting}
             >
               {option}
             </button>
           ))}
         </div>
 
-        {}
         <div className="next-button-container">
           <button
             className="next-button"
             onClick={goToNextQuestion}
-            disabled={!selectedOption} // El botón solo está habilitado si se seleccionó una opción
+            disabled={!selectedOption || isSubmitting}
           >
             <div className="svg-wrapper-1">
               <div className="svg-wrapper">
@@ -230,17 +353,25 @@ const KahootForm = () => {
                 </svg>
               </div>
             </div>
-            <span>Siguiente</span>
+            <span>{currentQuestionIndex === questions.length - 1 ? 'Finalizar' : 'Siguiente'}</span>
           </button>
         </div>
       </div>
 
       <div className="stars-container">
-        <FontAwesomeIcon icon={faStar} className="star-icon star-12" />
-        <FontAwesomeIcon icon={faStar} className="star-icon star-23" />
-        <FontAwesomeIcon icon={faStar} className="star-icon star-34" />
-        <FontAwesomeIcon icon={faStar} className="star-icon star-45" />
-        <FontAwesomeIcon icon={faStar} className="star-icon star-56" />
+        {Array.from({ length: 50 }).map((_, index) => (
+          <FontAwesomeIcon
+            key={index}
+            icon={faStar}
+            className="star-icon"
+            style={{
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              fontSize: `${0.5 + Math.random() * 1.5}rem`,
+              opacity: 0.1 + Math.random() * 0.5
+            }}
+          />
+        ))}
       </div>
     </div>
   );
