@@ -3,7 +3,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import CustomAlert from './CustomAlert';
+import CustomAlert from './components/CustomAlert/CustomAlert';
 
 // Crear un contenedor para las alertas si no existe
 const getAlertContainer = () => {
