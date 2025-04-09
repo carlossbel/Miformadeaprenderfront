@@ -217,7 +217,6 @@ const KahootForm = () => {
         setCurrentQuestionIndex(currentQuestionIndex + 1);
         setIsAnswered(false);
         setSelectedOption(null);
-        alertService.info(`Pregunta ${currentQuestionIndex + 2} de ${questions.length}`);
       } else {
         handleFinalSubmit();
       }
@@ -315,7 +314,7 @@ const KahootForm = () => {
         ></div>
       </div>
       
-      <div className="question-counter">
+      <div className="question-counter" style={{ color: "#ffffff" }}>
         Pregunta {currentQuestionIndex + 1} de {questions.length}
       </div>
       

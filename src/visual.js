@@ -5,36 +5,37 @@ import { faStar } from '@fortawesome/free-solid-svg-icons';
 
 const Visual = () => {
   return (
-    <div className="learning-visual-container">
-      <h1 className="title">Mejora tu Estilo de Aprendizaje Visual</h1>
-      <p className="description">
-        El aprendizaje visual se basa en utilizar imágenes, diagramas y videos para retener información. Aquí tienes algunos recursos útiles:
-      </p>
+<div className="learning-visual-container">
+  <h1 className="title" style={{ color: 'white' }}>Mejora tu Estilo de Aprendizaje Visual</h1>
+  <p className="description" style={{ color: 'white' }}>
+    El aprendizaje visual se basa en utilizar imágenes, diagramas y videos para retener información. Aquí tienes algunos recursos útiles:
+  </p>
 
       <div className="resources-section">
-        {}
         <div className="resource">
           <h2 className="resource-title">Videos Recomendados</h2>
           <div className="videos-container">
-          <iframe width="1200" height="600" 
-          src="https://www.youtube.com/embed/f48aBq8ngyc?si=Ns_G6aLjmoezXLBa" 
-          title="YouTube video player" 
-          frameborder="0" 
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-          referrerpolicy="strict-origin-when-cross-origin" 
-          allowfullscreen>
-          </iframe>
-          <iframe width="1200" height="600" 
-          src="https://www.youtube.com/embed/2NvhhHosv90?si=jnOZxvKj4vEa5Z8e" 
-          title="YouTube video player" 
-          frameborder="0" 
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-          referrerpolicy="strict-origin-when-cross-origin" 
-          allowfullscreen></iframe>
+            <iframe 
+              className="video-frame"
+              src="https://www.youtube.com/embed/f48aBq8ngyc?si=Ns_G6aLjmoezXLBa" 
+              title="YouTube video player" 
+              frameBorder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+              referrerPolicy="strict-origin-when-cross-origin" 
+              allowFullScreen
+            />
+            <iframe 
+              className="video-frame"
+              src="https://www.youtube.com/embed/2NvhhHosv90?si=jnOZxvKj4vEa5Z8e" 
+              title="YouTube video player" 
+              frameBorder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+              referrerPolicy="strict-origin-when-cross-origin" 
+              allowFullScreen
+            />
           </div>
         </div>
 
-        {}
         <div className="resource">
           <h2 className="resource-title">Documentos Útiles</h2>
           <ul className="documents-list">
@@ -59,7 +60,6 @@ const Visual = () => {
           </ul>
         </div>
 
-        {}
         <div className="resource">
           <h2 className="resource-title">Audios Educativos</h2>
           <div className="audio-container">
@@ -74,6 +74,7 @@ const Visual = () => {
           </div>
         </div>
       </div>
+
       <div className="stars-container">
         <FontAwesomeIcon icon={faStar} className="star-icon star-12" />
         <FontAwesomeIcon icon={faStar} className="star-icon star-56" />
