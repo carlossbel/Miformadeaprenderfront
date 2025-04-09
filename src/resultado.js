@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './resultado.css';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import alertService from './alertService';
 
 const Resultado = () => {
     const navigate = useNavigate();
@@ -20,6 +21,7 @@ const Resultado = () => {
         const storedUserId = localStorage.getItem('userId');
         if (!storedUserId) {
             setError('No se encontró ID de usuario.');
+            alertService.error('No se encontró ID de usuario');
             navigate('/'); // Redirige al inicio si no hay ID
         } else {
             setUserId(storedUserId);
@@ -33,6 +35,7 @@ const Resultado = () => {
             const fetchResultados = async () => {
                 try {
                     setLoading(true);
+                    alertService.info('Cargando resultados...');
                     const response = await fetch(`${API_URL}/auth/getpuntos/${userId}`);
                     
                     if (!response.ok) {
@@ -48,10 +51,12 @@ const Resultado = () => {
                         { estilo: "Kinestésico", porcentaje: parseFloat(data.kinestesico) || 0 },
                     ]);
                     
+                    alertService.success('Resultados cargados correctamente');
                     setLoading(false);
                 } catch (error) {
                     console.error('Error al obtener los resultados:', error);
                     setError('Error al cargar los resultados. Por favor, intenta nuevamente.');
+                    alertService.error('Error al cargar los resultados');
                     setLoading(false);
                 }
             };
@@ -115,7 +120,10 @@ const Resultado = () => {
     // Función para redireccionar a la página de recomendaciones
     const handleVisitExample = () => {
         if (redirectPath) {
+            alertService.info(`Cargando recomendaciones para estilo ${pMin.estilo}...`);
             navigate(redirectPath); 
+        } else {
+            alertService.warning('No se pudo determinar el estilo para recomendaciones');
         }
     };
     
@@ -206,28 +214,53 @@ const Resultado = () => {
                     <p>
                         Para mejorar tu rendimiento en el área de <strong>{pMin.estilo}</strong>, te recomendamos revisar la siguiente información y realizar los ejercicios sugeridos. Esto te ayudará a desarrollar estrategias de aprendizaje más efectivas para este estilo.
                     </p>
+                    
+                    {/* Pequeñas sugerencias específicas según el estilo */}
+                    <div className="quick-tips">
+                        <h3>Sugerencias rápidas:</h3>
+                        {pMin.estilo.toLowerCase() === 'visual' && (
+                            <ul>
+                                <li>Utiliza mapas mentales y diagramas para estudiar</li>
+                                <li>Trabaja con códigos de colores para organizar información</li>
+                                <li>Convierte conceptos abstractos en imágenes</li>
+                            </ul>
+                        )}
+                        {pMin.estilo.toLowerCase() === 'auditivo' && (
+                            <ul>
+                                <li>Graba las clases y reprodúcelas después</li>
+                                <li>Lee en voz alta cuando estudies</li>
+                                <li>Participa en debates y discusiones sobre el tema</li>
+                            </ul>
+                        )}
+                        {(pMin.estilo.toLowerCase() === 'kinestésico' || pMin.estilo.toLowerCase() === 'kinestesico') && (
+                            <ul>
+                                <li>Estudia en movimiento, caminando mientras repasas</li>
+                                <li>Usa modelos físicos o maquetas cuando sea posible</li>
+                                <li>Haz pausas activas frecuentes durante tus sesiones de estudio</li>
+                            </ul>
+                        )}
+                    </div>
                 </div>
             )}
             
             <div className="buttons-container">
-                <button className="cta" onClick={handleVisitExample}>
-                    <span className="hover-underline-animation">Ver Recomendaciones</span>
-                    <svg
-                        id="arrow-horizontal"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="30"
-                        height="10"
-                        viewBox="0 0 46 16"
-                    >
-                        <path
-                            id="Path_10"
-                            data-name="Path 10"
-                            d="M8,0,6.545,1.455l5.506,5.506H-30V9.039H12.052L6.545,14.545,8,16l8-8Z"
-                            transform="translate(30)"
-                            fill="white"
-                        ></path>
-                    </svg>
-                </button>
+                {pMin && (
+                    <button className="cta recommendation-button" onClick={handleVisitExample}>
+                        <span className="hover-underline-animation">Ver Recursos Completos</span>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="30"
+                            height="10"
+                            viewBox="0 0 46 16"
+                        >
+                            <path
+                                d="M8,0,6.545,1.455l5.506,5.506H-30V9.039H12.052L6.545,14.545,8,16l8-8Z"
+                                transform="translate(30)"
+                                fill="white"
+                            ></path>
+                        </svg>
+                    </button>
+                )}
             
                 <button className="cta" onClick={handleBackClick}>
                     <span>Regresar al Inicio</span>
